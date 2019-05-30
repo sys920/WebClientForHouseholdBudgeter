@@ -43,34 +43,33 @@
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Welcome!</h1>
+                                        <h1 class="h4 text-gray-900 mb-4">Welcome HouseHold Budgeter!</h1>
+                                    </div>
+                                    <div class="text-center">  
                                     </div>
                                     <form method="post" class="user">
                                         <div class="form-group">
                                             @Html.LabelFor(Model => Model.Email, "Email : ")
                                             @Html.TextBoxFor(Model => Model.Email, new { @class = "form-control form-control-user" })
-                                           
                                         </div>
+                                        <div class="text-danger"> @Html.ValidationMessageFor(Model => Model.Email) </div>
+
                                         <div class="form-group">
                                             @Html.LabelFor(Model => Model.Password, "Password : ")
                                             @Html.PasswordFor(Model => Model.Password, new { @class = "form-control form-control-user" })
                                         </div>
+                                        <div class="text-danger"> @Html.ValidationMessageFor(Model => Model.Password) </div>
                                         <div class="form-group">
-                                            @*<div class="custom-control custom-checkbox small">
-                <input type="checkbox" class="custom-control-input" id="customCheck">
-                <label class="custom-control-label" for="customCheck">Remember Me</label>
-            </div>*@
+
                                         </div>
                                         <button type="submit" class="btn btn-primary btn-user btn-block">Login</button>
-                                        <hr>
-
                                     </form>
                                     <hr>
                                     <div class="text-center">
-                                        <a class="small" href="forgot-password.html">Forgot Password?</a>
+                                        <a class="small" href="@Url.Action("ForgetPassword","Account")">Forgot Password?</a>
                                     </div>
                                     <div class="text-center">
-                                        <a class="small" href="@Url.Action("Register","Account")">Create an Account!</a>
+                                        <a class="small" href="@Url.Action("Register","Account")">Create New Account!</a>
                                     </div>
                                 </div>
                             </div>

@@ -6,21 +6,21 @@ using System.Web;
 
 namespace WebClientForHouseholdBudgeter.Models.ViewModels.Account
 {
-    public class RegisterUserViewModel
+    public class ChangePasswordViewModel
     {
-        [Required]
-        [Display(Name = "Email")]
-        [EmailAddress]
-        public string Email { get; set; }
+        [Required]       
+        [DataType(DataType.Password)]
+        [Display(Name = "OldPassword")]
+        public string OldPassword { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
-        public string Password { get; set; }
+        [Display(Name = "NewPassword")]
+        public string NewPassword { get; set; }
 
-      
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+
+        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
         public string ConfirmPassword { get; set; }
