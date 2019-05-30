@@ -1,4 +1,6 @@
-﻿@model RegisterUSerViewModel; 
+﻿@model  RegisterUserViewModel 
+{
+
 @{
     ViewBag.Title = "Register";
     Layout = "";
@@ -15,7 +17,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Register</title>
+    <title>Register User</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -40,23 +42,28 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                             </div>
-                            <form class="user">
-                               
+                            <form method="post" class="user">
+
                                 <div class="form-group">
-                                    <input type="email" class="form-control form-control-user" id="exampleInputEmail" placeholder="Email Address">
+                                    @Html.LabelFor(Model => Model.Email, "Email : ")                                    
+                                    @Html.TextBoxFor(Model => Model.Email, new { @class = "form-control form-control-user" })
                                 </div>
+                                <div class="text-danger"> @Html.ValidationMessageFor(Model => Model.Email) </div>
+
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
+                                        @Html.LabelFor(Model => Model.Password, "Password : ")
+                                        @Html.PasswordFor(Model => Model.Password, new { @class = "form-control form-control-user" })
                                     </div>
+                                    <div class="text-danger"> @Html.ValidationMessageFor(Model => Model.Password) </div>
                                     <div class="col-sm-6">
-                                        <input type="password" class="form-control form-control-user" id="exampleRepeatPassword" placeholder="Repeat Password">
+                                        @Html.LabelFor(Model => Model.ConfirmPassword, "ConfirmPassword : ")
+                                        @Html.PasswordFor(Model => Model.ConfirmPassword, new { @class = "form-control form-control-user" })
                                     </div>
+                                    <div class="text-danger"> @Html.ValidationMessageFor(Model => Model.ConfirmPassword) </div>
                                 </div>
-                                <a href="login.html" class="btn btn-primary btn-user btn-block">
-                                    Register Account
-                                </a>
-                               
+                                <button type="submit" class="btn btn-primary btn-user btn-block">SAVE</button>
+
                             </form>
                             <hr>
                             <div class="text-center">
