@@ -92,14 +92,15 @@ namespace WebClientForHouseholdBudgeter.Controllers
                 var cookie = new HttpCookie("BBCookie",result.AccessToken);
                 Response.Cookies.Add(cookie);
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("ListOfHouseHold", "HouseHold");
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
                 var data = response.Content.ReadAsStringAsync().Result;
                 var result = JsonConvert.DeserializeObject<APIErrorData>(data);
 
-                ModelState.AddModelError("", result.ErrorDescription);               
+                ModelState.AddModelError("", result.ErrorDescription);
+                return View();
 
             }
 

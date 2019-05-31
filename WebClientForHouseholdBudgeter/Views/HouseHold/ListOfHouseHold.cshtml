@@ -1,0 +1,71 @@
+﻿@model  List<ListOfHouseHoldViewModel>
+
+
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="py-3">
+        <h6 class="m-0 font-weight-bold text-primary">List of houseHold</h6>       
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered display-5" id="dataTable" cellspacing="0">
+                    <thead>
+                        <tr>                         
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Created</th>
+                            <th>Updated</th>
+                            <th>Users</th>
+                            <th>Invite</th>
+                            <th>Edit</th>
+                            <th>Leave</th>
+                            <th>Del</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var ele in Model)
+                            {
+                            <tr>
+                          
+                                <td>@ele.Name</td>
+                                <td>@ele.Description</td>
+                                <td>@ele.Created.ToString("MM/dd/yyyy")</td>
+                                <td>@(ele.Updated != null ? ele.Updated.Value.ToString("MM/dd/yyyy") : "")</td>
+                                <td class="text-center">
+                                    <a href="@Url.Action("UsersOfHouseHold", "HouseHold", new {id =ele.Id})"> <i class="fas fa-tasks"></i> </a>
+                                </td>
+                                <td class="text-center">
+                                    @if (ele.IsOwner)
+                                    {
+                                        <a href="@Url.Action("InviteUser", "HouseHold", new {id =ele.Id})"> <i class="fas fa-tasks"></i> </a>
+                                    }
+                                </td>
+
+                                <td class="text-center">
+                                    @if (ele.IsOwner)
+                                    {
+                                        <a href="@Url.Action("EditHouseHold", "HouseHold", new {id =ele.Id})"> <i class="fas fa-tasks"></i> </a>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @if (!ele.IsOwner)
+                                    {
+                                        <a href="@Url.Action("LeaveHouseHold", "HouseHold", new {id =ele.Id})"> <i class="fas fa-tasks"></i> </a>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @if (ele.IsOwner)
+                                    {
+                                        <a href="@Url.Action("DelteHouseHold", "HouseHold", new {id =ele.Id})"> <i class="fas fa-tasks"></i> </a>
+                                    }
+                                </td>
+                            </tr>
+                            }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,34 @@
+﻿@model  List<UsersOfHouseHoldViewModel>
+
+
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="py-3">
+        <h6 class="m-0 font-weight-bold text-primary">List of houseHold</h6>      
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered display-5" id="dataTable" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>UserId</th>
+                            <th>UserEmail</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var ele in Model)
+                        {
+                            <tr>
+                                <td>@ele.UserId</td>
+                                <td>@ele.UserEmail</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+             
+            </div>
+        </div>
+    </div>
+</div>

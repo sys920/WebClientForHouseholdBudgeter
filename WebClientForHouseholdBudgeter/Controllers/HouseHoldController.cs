@@ -56,7 +56,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
             var response = httpClient.PostAsync(url, enCodeParameters).Result;
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                return RedirectToAction("ViewHouseHold", "HouseHold");
+                return RedirectToAction("ListOfHouseHold", "HouseHold");
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
@@ -75,7 +75,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
         }
 
         [HttpGet]
-        public ActionResult ViewHouseHold()
+        public ActionResult ListOfHouseHold()
         {
             var cookie = Request.Cookies["BBCookie"];
 
@@ -93,7 +93,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
 
             var data = httpClient.GetStringAsync(url).Result;
 
-            var model = JsonConvert.DeserializeObject<List<ViewHouseHoldViewModel>>(data);
+            var model = JsonConvert.DeserializeObject<List<ListOfHouseHoldViewModel>>(data);
 
             return View(model);
         }
@@ -114,7 +114,13 @@ namespace WebClientForHouseholdBudgeter.Controllers
 
             httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
            
-            var data = httpClient.GetStringAsync(url).Result;
+            var response = httpClient.GetAsync(url).Result;
+            if(response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                return RedirectToAction("ListOfHouseHold", "HouseHold");
+            }
+                  
+            var data = response.Content.ReadAsStringAsync().Result;
 
             var model = JsonConvert.DeserializeObject<EditHouseHoldeViewModel>(data);
             return View(model);
@@ -150,7 +156,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
             var response = httpClient.PutAsync(url, enCodeParameters).Result;
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                return RedirectToAction("ViewHouseHold", "HouseHold");
+                return RedirectToAction("ListOfHouseHold", "HouseHold");
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
@@ -165,6 +171,113 @@ namespace WebClientForHouseholdBudgeter.Controllers
                 return View();
             }
             return RedirectToAction("InternalServerError", "Account");          
+        }
+
+        [HttpGet]
+        public ActionResult UsersOfHouseHold(int id)
+        {
+            var cookie = Request.Cookies["BBCookie"];
+            if (cookie == null)
+            {
+                return RedirectToAction("login", "Account");
+            }
+            var token = cookie.Value;
+
+            var url = $"http://localhost:55336/api/Household/GetAllMember/{id}";
+
+            var httpClient = new HttpClient();
+
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+
+            var data = httpClient.GetStringAsync(url).Result;
+
+            var models = JsonConvert.DeserializeObject<List<UsersOfHouseHoldViewModel>>(data);
+            return View(models);
+        }
+
+        [HttpGet]
+        public ActionResult InviteUser(int id)
+        {
+            ViewBag.HouseHoldId = id;
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult InviteUser(InviteUserViewModel formData)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+            var cookie = Request.Cookies["BBCookie"];
+            if (cookie == null)
+            {
+                return RedirectToAction("login", "Account");
+            }
+            var token = cookie.Value;
+
+            var url = $"http://localhost:55336/api/Household/InviteUser/{formData.Id}";
+
+
+            var httpClient = new HttpClient();
+
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+
+            var parameters = new List<KeyValuePair<string, string>>();           
+            parameters.Add(new KeyValuePair<string, string>("Email", formData.Email));
+
+            var enCodeParameters = new FormUrlEncodedContent(parameters);
+
+            var response = httpClient.PostAsync(url, enCodeParameters).Result;
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return RedirectToAction("ListOfHouseHold", "HouseHold");
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var data = response.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<APIErrorData>(data);
+
+                foreach (var ele in result.ModelState)
+                {
+                    ModelState.AddModelError("", ele.Value[0].ToString());
+                }
+
+                return View();
+            }
+
+            return RedirectToAction("InternalServerError", "Account");
+        }
+
+
+        [HttpGet]
+        public ActionResult ListOfInvitation()
+        {
+
+            var cookie = Request.Cookies["BBCookie"];
+            if (cookie == null)
+            {
+                return RedirectToAction("login", "Account");
+            }
+            var token = cookie.Value;
+
+            var url = $"http://localhost:55336/api/Household/GetAllInvitaion";
+
+            var httpClient = new HttpClient();
+
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+
+            var response = httpClient.GetAsync(url).Result;
+            if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                return RedirectToAction("ListOfHouseHold", "HouseHold");
+            }
+
+            var data = response.Content.ReadAsStringAsync().Result;
+
+            var models= JsonConvert.DeserializeObject<List<ListOfInvitation>>(data);
+
+            return View(models);
         }
 
     }

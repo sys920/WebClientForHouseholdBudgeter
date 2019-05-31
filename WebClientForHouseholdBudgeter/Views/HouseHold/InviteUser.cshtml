@@ -1,0 +1,42 @@
+﻿@model InviteUserViewModel
+@{
+    ViewBag.Title = "Invite User";
+}
+
+<div class="container-fluid">
+
+    <div class="py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Invite User</h6>
+        <div class="text-danger text-left">@Html.ValidationSummary(true)</div>
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+
+                <form method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="Id" value=@ViewBag.HouseHoldId />
+                    <table class="table table-bordered display-5" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <td>
+                                    <div>
+                                        @Html.LabelFor(Model => Model.Email, "Email : ")
+                                        @Html.TextBoxFor(Model => Model.Email, new { @class = "form-control  ", placeholder = "Type User Email" })
+                                    </div>
+                                    <div class="text-danger"> @Html.ValidationMessageFor(Model => Model.Email) </div>
+                                    <div>&nbsp;</div>                                   
+                                    <div> </div>
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">SAVE</button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
