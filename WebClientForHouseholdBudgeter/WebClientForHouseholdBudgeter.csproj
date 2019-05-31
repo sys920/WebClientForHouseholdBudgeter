@@ -121,7 +121,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\HouseHoldController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -133,6 +133,8 @@
     <Compile Include="Models\ViewModels\Account\LoginViewModel.cs" />
     <Compile Include="Models\ViewModels\Account\RegisterUserViewModel.cs" />
     <Compile Include="Models\ViewModels\Account\SetPasswordViewModel.cs" />
+    <Compile Include="Models\ViewModels\HouserHold\CreateHouseHoldViewModel.cs" />
+    <Compile Include="Models\ViewModels\HouserHold\ViewHouseHoldViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -1747,7 +1749,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="scss\navs\_global.scss" />
     <Content Include="scss\navs\_sidebar.scss" />
     <Content Include="scss\navs\_topbar.scss" />
@@ -1920,10 +1921,13 @@
     <Content Include="Views\Account\ChangePassword.cshtml" />
     <Content Include="Views\Account\ForgetPassword.cshtml" />
     <Content Include="Views\Account\SetPassword.cshtml" />
+    <Content Include="Views\Account\InterServerError.cshtml" />
+    <Content Include="Views\HouseHold\CreateHouseHold.cshtml" />
+    <Content Include="Views\HouseHold\Index.cshtml" />
+    <Content Include="Views\HouseHold\ViewHouseHold.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\HouseHold\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

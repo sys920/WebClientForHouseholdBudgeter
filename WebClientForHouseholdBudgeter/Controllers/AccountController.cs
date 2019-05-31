@@ -52,7 +52,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
 
                 return View();
             }
-            return View();
+            return RedirectToAction("InternalServerError", "Account");
         }
 
         [HttpGet]
@@ -103,7 +103,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
 
             }
 
-            return View();
+            return RedirectToAction("InterServerError", "Account");
         }
 
         [HttpGet]
@@ -248,6 +248,12 @@ namespace WebClientForHouseholdBudgeter.Controllers
             }
 
             return RedirectToAction("ForgetPassword", "Account");
+        }
+
+        [HttpGet]
+        public ActionResult InterServerError()
+        {
+            return View();
         }
     }
 }
