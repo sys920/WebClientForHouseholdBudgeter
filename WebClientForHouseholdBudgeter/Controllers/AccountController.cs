@@ -37,9 +37,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
 
             var response = httpClient.PostAsync(url, enCodeParameters).Result;
             if(response.StatusCode == System.Net.HttpStatusCode.OK)              
-            {
-                var data = response.Content.ReadAsStringAsync().Result;
-
+            {    
                 return RedirectToAction("Login", "Account");
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
@@ -100,6 +98,9 @@ namespace WebClientForHouseholdBudgeter.Controllers
             {
                 var data = response.Content.ReadAsStringAsync().Result;
                 var result = JsonConvert.DeserializeObject<APIErrorData>(data);
+
+                ModelState.AddModelError("", result.ErrorDescription);               
+
             }
 
             return View();
@@ -145,6 +146,18 @@ namespace WebClientForHouseholdBudgeter.Controllers
             { 
                 return RedirectToAction("Index", "Home");
             }
+            else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var data = response.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<APIErrorData>(data);
+
+                foreach (var ele in result.ModelState)
+                {
+                    ModelState.AddModelError("", ele.Value[0].ToString());
+                }
+
+                return View();
+            }
 
             return RedirectToAction("Login", "Account");
         }
@@ -177,8 +190,19 @@ namespace WebClientForHouseholdBudgeter.Controllers
             {
                 return RedirectToAction("SetPassword", "Account");
             }
+            else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var data = response.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<APIErrorData>(data);
 
-            return RedirectToAction("ForgetPassword", "Account");
+                foreach (var ele in result.ModelState)
+                {
+                    ModelState.AddModelError("", ele.Value[0].ToString());
+                }
+                return View();
+            }
+
+            return RedirectToAction("SetPassword", "Account");
         }
 
         [HttpGet]
@@ -211,6 +235,16 @@ namespace WebClientForHouseholdBudgeter.Controllers
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 return RedirectToAction("Login", "Account");
+            }
+            else if(response.StatusCode ==System.Net.HttpStatusCode.BadRequest)
+            {
+                var data = response.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<APIErrorData>(data);
+                foreach(var ele in result.ModelState)
+                {
+                    ModelState.AddModelError("", ele.Value[0].ToString());
+                }
+                return View();
             }
 
             return RedirectToAction("ForgetPassword", "Account");
