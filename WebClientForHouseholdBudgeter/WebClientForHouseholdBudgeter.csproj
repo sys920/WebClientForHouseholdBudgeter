@@ -134,6 +134,7 @@
     <Compile Include="Models\ViewModels\Account\RegisterUserViewModel.cs" />
     <Compile Include="Models\ViewModels\Account\SetPasswordViewModel.cs" />
     <Compile Include="Models\ViewModels\HouserHold\CreateHouseHoldViewModel.cs" />
+    <Compile Include="Models\ViewModels\HouserHold\EditHouseHoldeViewModel.cs" />
     <Compile Include="Models\ViewModels\HouserHold\ViewHouseHoldViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -1925,6 +1926,7 @@
     <Content Include="Views\HouseHold\CreateHouseHold.cshtml" />
     <Content Include="Views\HouseHold\Index.cshtml" />
     <Content Include="Views\HouseHold\ViewHouseHold.cshtml" />
+    <Content Include="Views\HouseHold\EditHouseHold.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

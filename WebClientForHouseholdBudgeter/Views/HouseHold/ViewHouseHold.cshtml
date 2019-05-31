@@ -5,6 +5,7 @@
     <!-- Page Heading -->
     <div class="py-3">
         <h6 class="m-0 font-weight-bold text-primary">List of houseHold</h6>
+        <div class="text-danger text-left"> @Html.ValidationSummary(true) </div>
     </div>
     <div class="card shadow mb-4">
         <div class="card-body">
@@ -17,21 +18,37 @@
                             <th>Description</th>
                             <th>Created</th>
                             <th>Updated</th>
-                            <th class="text-center">Detail</th>
+                            <th>Users</th>
+                            <th>Edit</th>
+                            <th>Leave</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var ele in Model)
-                        {
-                            <tr>
-                                <td>@ele.Id</td>
-                                <td>@ele.Name</td>
-                                <td>@ele.Description</td>
-                                <td>@ele.Created.ToString("MM/dd/yyyy")</td>
-                                <td>@(ele.Updated != null ? ele.Updated.Value.ToString("MM/dd/yyyy") : "")</td>
-                                <td class="text-center"><a href="@Url.Action("", "", new {PId =ele.Id})"> <i class="fas fa-tasks"></i> </a></td>
-                            </tr>
-                        }
+                            {
+                        <tr>
+                            <td>@ele.Id</td>
+                            <td>@ele.Name</td>
+                            <td>@ele.Description</td>
+                            <td>@ele.Created.ToString("MM/dd/yyyy")</td>
+                            <td>@(ele.Updated != null ? ele.Updated.Value.ToString("MM/dd/yyyy") : "")</td>
+                            <td class="text-center">
+                                <a href="@Url.Action("UsersOfHouseHold", "HouseHold", new {id =ele.Id})"> <i class="fas fa-tasks"></i> </a>
+                            </td>
+                            <td class="text-center">
+                                @if (ele.IsOwner)
+                                {
+                                    <a href="@Url.Action("EditHouseHold", "HouseHold", new {id =ele.Id})"> <i class="fas fa-tasks"></i> </a>
+                                }
+                            </td>
+                            <td class="text-center">
+                                @if (!ele.IsOwner)
+                                {
+                                    <a href="@Url.Action("LeaveHouseHold", "HouseHold", new {id =ele.Id})"> <i class="fas fa-tasks"></i> </a>
+                                }
+                            </td>
+                        </tr>
+                            }
                     </tbody>
                 </table>
 

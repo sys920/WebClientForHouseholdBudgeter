@@ -74,7 +74,6 @@ namespace WebClientForHouseholdBudgeter.Controllers
             return RedirectToAction("InternalServerError", "Account");
         }
 
-
         [HttpGet]
         public ActionResult ViewHouseHold()
         {
@@ -97,6 +96,75 @@ namespace WebClientForHouseholdBudgeter.Controllers
             var model = JsonConvert.DeserializeObject<List<ViewHouseHoldViewModel>>(data);
 
             return View(model);
+        }
+
+        [HttpGet]
+        public ActionResult EditHouseHold(int id)
+        {
+            var cookie = Request.Cookies["BBCookie"];
+            if (cookie == null)
+            {
+                return RedirectToAction("login", "Account");
+            }
+            var token = cookie.Value;
+
+            var url = $"http://localhost:55336/api/HouseHold/GetByOwnerId/{id}";
+
+            var httpClient = new HttpClient();
+
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+           
+            var data = httpClient.GetStringAsync(url).Result;
+
+            var model = JsonConvert.DeserializeObject<EditHouseHoldeViewModel>(data);
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult EditHouseHold(EditHouseHoldeViewModel formData)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+            var cookie = Request.Cookies["BBCookie"];
+            if (cookie == null)
+            {
+                return RedirectToAction("login", "Account");
+            }
+            var token = cookie.Value;
+
+            var url = $"http://localhost:55336/api/HouseHold/Update/{formData.Id}";
+
+
+            var httpClient = new HttpClient();
+
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+
+            var parameters = new List<KeyValuePair<string, string>>();
+            parameters.Add(new KeyValuePair<string, string>("Name", formData.Name));
+            parameters.Add(new KeyValuePair<string, string>("Description", formData.Description));
+
+            var enCodeParameters = new FormUrlEncodedContent(parameters);
+
+            var response = httpClient.PutAsync(url, enCodeParameters).Result;
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return RedirectToAction("ViewHouseHold", "HouseHold");
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var data = response.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<APIErrorData>(data);
+
+                foreach (var ele in result.ModelState)
+                {
+                    ModelState.AddModelError("", ele.Value[0].ToString());
+                }
+
+                return View();
+            }
+            return RedirectToAction("InternalServerError", "Account");          
         }
 
     }
