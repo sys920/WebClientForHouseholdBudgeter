@@ -78,6 +78,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
             parameters.Add(new KeyValuePair<string, string>("Password", formData.Password));
             parameters.Add(new KeyValuePair<string, string>("grant_type", grantType));
 
+           
 
             var enCodeParameters = new FormUrlEncodedContent(parameters);
 
@@ -89,8 +90,8 @@ namespace WebClientForHouseholdBudgeter.Controllers
 
                 var result = JsonConvert.DeserializeObject<LoginTokenViewModel>(data);
 
-                var cookie = new HttpCookie("BBCookie",result.AccessToken);
-                Response.Cookies.Add(cookie);
+                var cookie = new HttpCookie("BBCookie", result.AccessToken);
+                Response.Cookies.Add(cookie);            
 
                 return RedirectToAction("ListOfHouseHold", "HouseHold");
             }
@@ -105,6 +106,16 @@ namespace WebClientForHouseholdBudgeter.Controllers
             }
 
             return RedirectToAction("InterServerError", "Account");
+        }
+
+        [HttpGet] 
+        public ActionResult LogOut()
+        {
+            var cookie = new HttpCookie("BBCookie");
+            cookie.Expires = DateTime.Now.AddDays(-1d);
+            Response.Cookies.Add(cookie);
+
+            return RedirectToAction("login", "Account");
         }
 
         [HttpGet]

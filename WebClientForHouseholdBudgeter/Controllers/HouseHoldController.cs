@@ -253,7 +253,6 @@ namespace WebClientForHouseholdBudgeter.Controllers
         [HttpGet]
         public ActionResult ListOfInvitation()
         {
-
             var cookie = Request.Cookies["BBCookie"];
             if (cookie == null)
             {
@@ -278,6 +277,84 @@ namespace WebClientForHouseholdBudgeter.Controllers
             var models= JsonConvert.DeserializeObject<List<ListOfInvitation>>(data);
 
             return View(models);
+        }
+
+        [HttpGet]
+        public ActionResult AcceptInvitation(int id)
+        {
+            var cookie = Request.Cookies["BBCookie"];
+            if (cookie == null)
+            {
+                return RedirectToAction("login", "Account");
+            }
+            var token = cookie.Value;
+
+            var url = $"http://localhost:55336/api/Household/AcceptInvitaion/{id}";
+
+            var httpClient = new HttpClient();
+
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+
+            var response = httpClient.GetAsync(url).Result;
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+
+                return RedirectToAction("ListOfHouseHold", "HouseHold");
+            }
+
+            return RedirectToAction("InternalServerError", "Account");
+        }
+
+        [HttpGet]
+        public ActionResult LeaveHousehold(int id)
+        {
+            var cookie = Request.Cookies["BBCookie"];
+            if (cookie == null)
+            {
+                return RedirectToAction("login", "Account");
+            }
+            var token = cookie.Value;
+
+            var url = $"http://localhost:55336/api/Household/Leave/{id}";
+
+            var httpClient = new HttpClient();
+
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+
+            var response = httpClient.DeleteAsync(url).Result;
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return RedirectToAction("ListOfHouseHold", "HouseHold");
+            }
+
+            return RedirectToAction("InternalServerError", "Account");
+
+        }
+
+        [HttpGet]
+        public ActionResult DeleteHouseHold(int id)
+        {
+            var cookie = Request.Cookies["BBCookie"];
+            if (cookie == null)
+            {
+                return RedirectToAction("login", "Account");
+            }
+            var token = cookie.Value;
+
+            var url = $"http://localhost:55336/api/Household/Delete/{id}";
+
+            var httpClient = new HttpClient();
+
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+
+            var response = httpClient.DeleteAsync(url).Result;
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return RedirectToAction("ListOfHouseHold", "HouseHold");
+            }
+
+            return RedirectToAction("InternalServerError", "Account");
+
         }
 
     }

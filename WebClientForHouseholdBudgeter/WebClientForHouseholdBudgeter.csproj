@@ -1934,6 +1934,7 @@
     <Content Include="Views\HouseHold\InviteUser.cshtml" />
     <Content Include="Views\HouseHold\AcceptInvitaion.cshtml" />
     <Content Include="Views\HouseHold\ListOfInvitation.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,21 @@
+﻿@if (Request.Cookies["BBCookie"] != null)
+{    
+    <ul class="nav navbar-nav navbar-right">
+        <li>
+            <i class="fas fa-user-check"></i> Hello!
+        </li>
+        <li>&nbsp; &nbsp;</li>
+        <li><a href="#" data-toggle="modal" data-target="#logoutModal"><i class="fas fa-sign-out-alt"></i> Log off</a></li>
+    </ul>   
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li><i class="fas fa-sign-in-alt"></i> @Html.ActionLink("Login", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+        <li>&nbsp;&nbsp;</li>
+        <li><i class="fas fa-user-edit"></i> @Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        <li>&nbsp;&nbsp;</li>   
+         <li><i class="fas fa-user-edit"></i> @Html.ActionLink("ForgetPassword", "ForgetPassword", "Account", routeValues: null, htmlAttributes: new { id = "ForgetPasswordLink" })</li>
+        <li>&nbsp;&nbsp;</li>  
+    </ul>
+}
