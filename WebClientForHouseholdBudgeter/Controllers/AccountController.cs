@@ -164,7 +164,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
             
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             { 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "HouseHold");
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
