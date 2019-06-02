@@ -39,7 +39,8 @@ namespace WebClientForHouseholdBudgeter.Controllers
             {
                 return RedirectToAction("login", "Account");
             }
-            var token = cookie.Values["Token"];
+            var token = cookie.Values;
+
 
             var url = $"http://localhost:55336/api/Household/Create";
 
@@ -79,9 +80,9 @@ namespace WebClientForHouseholdBudgeter.Controllers
         {
             var cookie = Request.Cookies["BBCookie"];
 
-            if(cookie == null)
+            if (cookie == null)
             {
-                return RedirectToAction("login","Account");
+                return RedirectToAction("login", "Account");
             }
             var token = cookie.Values;
 
@@ -102,6 +103,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
         public ActionResult EditHouseHold(int id)
         {
             var cookie = Request.Cookies["BBCookie"];
+
             if (cookie == null)
             {
                 return RedirectToAction("login", "Account");
@@ -243,12 +245,12 @@ namespace WebClientForHouseholdBudgeter.Controllers
                     ModelState.AddModelError("", ele.Value[0].ToString());
                 }
 
+                ViewBag.HouseHoldId = formData.Id;
                 return View();
             }
 
             return RedirectToAction("InternalServerError", "Account");
         }
-
 
         [HttpGet]
         public ActionResult ListOfInvitation()
@@ -355,7 +357,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
 
             return RedirectToAction("InternalServerError", "Account");
 
-        }
+        }       
 
     }
 }

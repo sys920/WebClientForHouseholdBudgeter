@@ -14,8 +14,8 @@ namespace WebClientForHouseholdBudgeter.Models.Filters
         }
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-           
+        {          
+            base.OnActionExecuting(filterContext);
         }
 
         public override void OnResultExecuted(ResultExecutedContext filterContext)
