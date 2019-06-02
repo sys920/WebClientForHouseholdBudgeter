@@ -39,7 +39,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
             {
                 return RedirectToAction("login", "Account");
             }
-            var token = cookie.Value;
+            var token = cookie.Values["Token"];
 
             var url = $"http://localhost:55336/api/Household/Create";
 
@@ -83,7 +83,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
             {
                 return RedirectToAction("login","Account");
             }
-            var token = cookie.Value;
+            var token = cookie.Values;
 
             var url = $"http://localhost:55336/api/Household/GetAll";
 

@@ -15,9 +15,9 @@
                             <th>Id</th>
                             <th>Name</th>
                             <th>Description</th>
-                           
+
                             <th>Users</th>
-                            <th>Invite</th>
+                            <th>Invite user</th>
                             <th>Edit</th>
                             <th>Leave</th>
                             <th>Del</th>
@@ -31,33 +31,33 @@
                                 <td>@ele.Name</td>
                                 <td>@ele.Description</td>
                                 @*<td>@ele.Created.ToString("MM/dd/yyyy")</td>
-                                <td>@(ele.Updated != null ? ele.Updated.Value.ToString("MM/dd/yyyy") : "")</td>*@
+                                    <td>@(ele.Updated != null ? ele.Updated.Value.ToString("MM/dd/yyyy") : "")</td>*@
                                 <td class="text-center">
-                                    <a href="@Url.Action("UsersOfHouseHold", "HouseHold", new {id =ele.Id})"> <i class="fas fa-tasks"></i> </a>
+                                    <a href="@Url.Action("UsersOfHouseHold", "HouseHold", new {id =ele.Id})"> <i class="fas fa-user-friends"></i> </a>
                                 </td>
                                 <td class="text-center">
                                     @if (ele.IsOwner)
                                     {
-                                        <a href="@Url.Action("InviteUser", "HouseHold", new {id =ele.Id})"> <i class="fas fa-tasks"></i> </a>
+                                        <a href="@Url.Action("InviteUser", "HouseHold", new {id =ele.Id})"> <i class="fas fa-user-plus"></i> </a>
                                     }
                                 </td>
 
                                 <td class="text-center">
                                     @if (ele.IsOwner)
                                     {
-                                        <a href="@Url.Action("EditHouseHold", "HouseHold", new {id =ele.Id})"> <i class="fas fa-tasks"></i> </a>
+                                        <a href="@Url.Action("EditHouseHold", "HouseHold", new {id =ele.Id})"> <i class="fas fa-edit"></i> </a>
                                     }
                                 </td>
                                 <td class="text-center">
                                     @if (!ele.IsOwner)
-                                    {
-                                        <a href="@Url.Action("LeaveHousehold", "HouseHold", new {id =ele.Id})"> <i class="fas fa-tasks"></i> </a>
-                                    }
+                                    {                          
+                                        <a href="#" data-toggle="modal" data-target="#LeaveHouseholdModal" @{ViewBag.Id = ele.Id;}><i class="fas fa-sign-out-alt"></i></a>
+                                    }                                    
                                 </td>
                                 <td class="text-center">
                                     @if (ele.IsOwner)
-                                    {
-                                        <a href="@Url.Action("DeleteHouseHold", "HouseHold", new {id =ele.Id})"> <i class="fas fa-tasks"></i> </a>
+                                    {                                       
+                                        <a href="#" data-toggle="modal" data-target="#DeleteHouseholdModal" @{ViewBag.Id = ele.Id;}><i class="fas fa-trash-alt"></i></a>
                                     }
                                 </td>
                             </tr>
@@ -75,15 +75,36 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Are you sure to leave this houseHold ?</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Ready to delete this houseHold?</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">Select "Leave" below if you are ready to leave this houseHold.</div>
+            <div class="modal-body">Are you sure to leave this houseHold.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="@Url.Action("LeaveHousehold", "HouseHold", new { id = 0})">Leave</a>
+                <a class="btn btn-primary" href="@Url.Action("LeaveHousehold", "HouseHold", new { id = ViewBag.Id})">Leave</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Delete HouseHold Modal-->
+<div class="modal fade" id="DeleteHouseholdModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ready to delete this houseHold?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Leave" below if you want to delete everything in this houseHold.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="@Url.Action("DeleteHousehold", "HouseHold", new { id = ViewBag.Id})">Leave</a>
             </div>
         </div>
     </div>

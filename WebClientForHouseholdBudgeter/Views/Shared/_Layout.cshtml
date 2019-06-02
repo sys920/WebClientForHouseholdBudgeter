@@ -34,7 +34,7 @@
             <hr class="sidebar-divider my-0">
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    <i class="fas fa-layer-group"></i>
+                    <i class="fas fa-home"></i>
                     <span>HouseHold</span>
                 </a>
 
@@ -51,7 +51,7 @@
             <hr class="sidebar-divider my-0">
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-layer-group"></i>
+                    <i class="fab fa-invision"></i>
                     <span>Invitation</span>
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
@@ -60,20 +60,25 @@
                     </div>
                 </div>
             </li>
-            
-            <!--Project Collapse Menu -->
-            <hr class="sidebar-divider my-0">
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
-                    <i class="fas fa-layer-group"></i>
-                    <span>Setting</span>
-                </a>
-                <div id="collapseThree" class="collapse" aria-labelledby="collapseThree" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="@Url.Action("ChangePassword","Account")">Change Password</a>
+
+
+            @if (Request.Cookies["BBCookie"] != null)
+            {
+                <!--Project Collapse Menu -->
+                <hr class="sidebar-divider my-0">
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                        <i class="fas fa-cogs"></i>
+                        <span>Setting</span>
+                    </a>
+                    <div id="collapseThree" class="collapse" aria-labelledby="collapseThree" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="@Url.Action("ChangePassword","Account")">Change Password</a>
+                        </div>
                     </div>
-                </div>
-            </li>
+                </li>
+            }
+
             <hr class="sidebar-divider">
 
             <!-- Sidebar Toggler (Sidebar) -->
@@ -92,17 +97,15 @@
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                         <i class="fa fa-bars"></i>
                     </button>
+
                     <!-- Topbar Search -->
                     <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            @*<input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">*@
-                            <div class="input-group-append">
-                                @*<button class="btn btn-primary" type="button">
-                        <i class="fas fa-search fa-sm"></i>
-                    </button>*@
+                        <div class="input-group">                          
+                            <div class="input-group-append">                                
                             </div>
                         </div>
                     </form>
+
                     <!-- Topbar Navbar -->
                     @ViewBag.UserName
                     <div class="text-center text-right">@Html.Partial("_LoginPartial")</div>

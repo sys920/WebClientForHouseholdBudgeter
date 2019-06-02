@@ -14,7 +14,7 @@
                             <th>Id</th>
                             <th>Name</th>
                             <th>Description</th>
-                            <th>Accept</th>
+                            <th>Click to Accept</th>
 
                         </tr>
                     </thead>
@@ -30,7 +30,7 @@
                                         <td>@ele.Description</td>
 
                                         <td class="text-center">
-                                            <a href="@Url.Action("AcceptInvitation", "HouseHold", new {id =ele.Id})"> <i class="fas fa-tasks"></i> </a>
+                                            <a href="@Url.Action("AcceptInvitation", "HouseHold", new {id =ele.Id})"> <i class="far fa-square"></i> </a>
                                         </td>
                                       
                                     </tr>

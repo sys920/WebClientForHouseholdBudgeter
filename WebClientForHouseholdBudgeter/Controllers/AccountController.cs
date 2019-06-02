@@ -91,7 +91,10 @@ namespace WebClientForHouseholdBudgeter.Controllers
                 var result = JsonConvert.DeserializeObject<LoginTokenViewModel>(data);
 
                 var cookie = new HttpCookie("BBCookie", result.AccessToken);
-                Response.Cookies.Add(cookie);            
+                Response.Cookies.Add(cookie);
+
+                var cookie2 = new HttpCookie("UserEmail", formData.Email);
+                Response.Cookies.Add(cookie2);
 
                 return RedirectToAction("ListOfHouseHold", "HouseHold");
             }
@@ -115,18 +118,23 @@ namespace WebClientForHouseholdBudgeter.Controllers
             cookie.Expires = DateTime.Now.AddDays(-1d);
             Response.Cookies.Add(cookie);
 
+            var cookie2 = new HttpCookie("UserEmail");
+            cookie.Expires = DateTime.Now.AddDays(-1d);
+            Response.Cookies.Add(cookie2);
+
             return RedirectToAction("login", "Account");
         }
 
         [HttpGet]
         public ActionResult ChangePassword()
-        {
+        {            
             return View();
         }
 
         [HttpPost]
         public ActionResult ChangePassword(ChangePasswordViewModel formData)
-        {
+        {           
+
             if (!ModelState.IsValid)
             {
                 return View();
