@@ -27,8 +27,8 @@
                         @foreach (var ele in Model)
                         {
                             <tr>
-                                <td>@ele.Id</td>
-                                <td>@ele.Name</td>
+                                <td> <a href="@Url.Action("DetailOfHouseHold", "HouseHold", new {id =ele.Id})">@ele.Id</a></td>
+                                <td> <a href="@Url.Action("DetailOfHouseHold", "HouseHold", new {id =ele.Id})">@ele.Name</a></td>
                                 <td>@ele.Description</td>
                                 @*<td>@ele.Created.ToString("MM/dd/yyyy")</td>
                                     <td>@(ele.Updated != null ? ele.Updated.Value.ToString("MM/dd/yyyy") : "")</td>*@

@@ -16,12 +16,26 @@ namespace WebClientForHouseholdBudgeter.Controllers
         
         public ActionResult Index()
         {
+            var cookie = Request.Cookies["BBCookie"];
+
+            if (cookie == null)
+            {
+                return RedirectToAction("login", "Account");
+            }
+
             return View();
         }
 
         [HttpGet]
         public ActionResult CreateHouseHold()
         {
+            var cookie = Request.Cookies["BBCookie"];
+
+            if (cookie == null)
+            {
+                return RedirectToAction("login", "Account");
+            }
+
             return View();
         }
 
@@ -98,6 +112,37 @@ namespace WebClientForHouseholdBudgeter.Controllers
 
             return View(model);
         }
+
+        [HttpGet]
+        public ActionResult DetailOfHouseHold(int id)
+        {
+            var cookie = Request.Cookies["BBCookie"];
+
+            if (cookie == null)
+            {
+                return RedirectToAction("login", "Account");
+            }
+            var token = cookie.Values;
+
+            var url = $"http://localhost:55336/api/Household/GetById/{id}";
+
+            var httpClient = new HttpClient();
+
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+
+            var response = httpClient.GetAsync(url).Result;
+            if(response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                return RedirectToAction("ListOfHouseHold","HouseHold");
+            }
+
+            var data = response.Content.ReadAsStringAsync().Result;
+
+            var model = JsonConvert.DeserializeObject<DetailOfHouseHoldViewModel>(data);
+
+            return View(model);
+        }
+
 
         [HttpGet]
         public ActionResult EditHouseHold(int id)
@@ -191,8 +236,13 @@ namespace WebClientForHouseholdBudgeter.Controllers
 
             httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
 
-            var data = httpClient.GetStringAsync(url).Result;
+            var response = httpClient.GetAsync(url).Result;
+            if(response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                return RedirectToAction("ListOfHouseHold", "HouseHold");
+            }
 
+            var data = response.Content.ReadAsStringAsync().Result;
             var models = JsonConvert.DeserializeObject<List<UsersOfHouseHoldViewModel>>(data);
             return View(models);
         }

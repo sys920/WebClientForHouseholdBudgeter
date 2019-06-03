@@ -134,6 +134,7 @@
     <Compile Include="Models\ViewModels\Account\RegisterUserViewModel.cs" />
     <Compile Include="Models\ViewModels\Account\SetPasswordViewModel.cs" />
     <Compile Include="Models\ViewModels\HouserHold\CreateHouseHoldViewModel.cs" />
+    <Compile Include="Models\ViewModels\HouserHold\DetailOfHouseHoldViewModel.cs" />
     <Compile Include="Models\ViewModels\HouserHold\EditHouseHoldeViewModel.cs" />
     <Compile Include="Models\ViewModels\HouserHold\InviteUserViewModel.cs" />
     <Compile Include="Models\ViewModels\HouserHold\ListOfInvitation.cs" />
@@ -1935,6 +1936,7 @@
     <Content Include="Views\HouseHold\AcceptInvitaion.cshtml" />
     <Content Include="Views\HouseHold\ListOfInvitation.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\HouseHold\DetailOfHouseHold.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -96,7 +96,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
                 var cookie2 = new HttpCookie("UserEmail", formData.Email);
                 Response.Cookies.Add(cookie2);
 
-                return RedirectToAction("ListOfHouseHold", "HouseHold");
+                return RedirectToAction("Index", "HouseHold");
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {

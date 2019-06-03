@@ -1,0 +1,54 @@
+﻿@model DetailOfHouseHoldViewModel
+
+<div class="container-fluid">
+    <div class="py-3">
+        <h6 class="m-0 font-weight-bold text-primary">HouseHold Detail</h6>
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered display-5" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <td>
+                                <div>
+                                  
+                                    <span>Name : @Model.Name [ ID : @Model.Id ]</span>
+                                   
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div>
+                                    Description : @Model.Description
+                                </div>                              
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div>
+                                    <span>Created Date : @Model.Created </span> &nbsp; &nbsp;
+                                    @if (Model.Updated.HasValue)
+                                    {
+                                        <span>Updated Date : @Model.Updated</span>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                       
+                       
+                    </thead>
+                </table>
+                <div class="text-center">
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
