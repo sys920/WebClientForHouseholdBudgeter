@@ -86,7 +86,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
                 return View();
             }
 
-            return RedirectToAction("InternalServerError", "Account");
+            return View("CustomErrorView");
         }
 
         [HttpGet]
@@ -170,6 +170,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
             var data = response.Content.ReadAsStringAsync().Result;
 
             var model = JsonConvert.DeserializeObject<EditHouseHoldeViewModel>(data);
+
             return View(model);
         }
 
@@ -181,6 +182,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
                 return View();
             }
             var cookie = Request.Cookies["BBCookie"];
+
             if (cookie == null)
             {
                 return RedirectToAction("login", "Account");
@@ -217,7 +219,8 @@ namespace WebClientForHouseholdBudgeter.Controllers
 
                 return View();
             }
-            return RedirectToAction("InternalServerError", "Account");          
+
+            return View("CustomErrorView");
         }
 
         [HttpGet]
@@ -251,6 +254,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
         public ActionResult InviteUser(int id)
         {
             ViewBag.HouseHoldId = id;
+
             return View();
         }
 
@@ -296,10 +300,11 @@ namespace WebClientForHouseholdBudgeter.Controllers
                 }
 
                 ViewBag.HouseHoldId = formData.Id;
+
                 return View();
             }
 
-            return RedirectToAction("InternalServerError", "Account");
+            return View("CustomErrorView");
         }
 
         [HttpGet]
@@ -348,13 +353,13 @@ namespace WebClientForHouseholdBudgeter.Controllers
             httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
 
             var response = httpClient.GetAsync(url).Result;
+
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-
                 return RedirectToAction("ListOfHouseHold", "HouseHold");
-            }
+            } 
 
-            return RedirectToAction("InternalServerError", "Account");
+            return View("CustomErrorView");
         }
 
         [HttpGet]
@@ -379,7 +384,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
                 return RedirectToAction("ListOfHouseHold", "HouseHold");
             }
 
-            return RedirectToAction("InternalServerError", "Account");
+            return View("CustomErrorView");
 
         }
 
@@ -405,8 +410,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
                 return RedirectToAction("ListOfHouseHold", "HouseHold");
             }
 
-            return RedirectToAction("InternalServerError", "Account");
-
+            return View("CustomErrorView");
         }       
 
     }

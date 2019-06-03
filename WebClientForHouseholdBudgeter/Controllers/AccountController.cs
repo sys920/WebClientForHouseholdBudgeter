@@ -269,11 +269,6 @@ namespace WebClientForHouseholdBudgeter.Controllers
 
             return RedirectToAction("ForgetPassword", "Account");
         }
-
-        [HttpGet]
-        public ActionResult InterServerError()
-        {
-            return View();
-        }
+       
     }
 }

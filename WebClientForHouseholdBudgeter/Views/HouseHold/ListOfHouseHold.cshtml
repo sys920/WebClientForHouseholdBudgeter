@@ -50,14 +50,17 @@
                                 </td>
                                 <td class="text-center">
                                     @if (!ele.IsOwner)
-                                    {                          
-                                        <a href="#" data-toggle="modal" data-target="#LeaveHouseholdModal" @{ViewBag.Id = ele.Id;}><i class="fas fa-sign-out-alt"></i></a>
-                                    }                                    
+                                    {
+                                        <a href="@Url.Action("LeaveHousehold", "HouseHold", new {id =ele.Id})"><i class="fas fa-sign-out-alt"></i> </a>
+
+                                        @*<a href="#" data-toggle="modal" data-target="#LeaveHouseholdModal" @{ViewBag.LeaveId = ele.Id;}><i class="fas fa-sign-out-alt"></i></a>*@
+                                    }
                                 </td>
                                 <td class="text-center">
                                     @if (ele.IsOwner)
-                                    {                                       
-                                        <a href="#" data-toggle="modal" data-target="#DeleteHouseholdModal" @{ViewBag.Id = ele.Id;}><i class="fas fa-trash-alt"></i></a>
+                                    {
+                                        <a href="@Url.Action("DeleteHousehold", "HouseHold", new {id =ele.Id})"><i class="fas fa-trash-alt"></i> </a>
+                                        @*<a href="#" data-toggle="modal" data-target="#DeleteHouseholdModal" @{ViewBag.DeleteId = ele.Id;}><i class="fas fa-trash-alt"></i></a>*@
                                     }
                                 </td>
                             </tr>
@@ -83,7 +86,7 @@
             <div class="modal-body">Are you sure to leave this houseHold.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="@Url.Action("LeaveHousehold", "HouseHold", new { id = ViewBag.Id})">Leave</a>
+                <a class="btn btn-primary" href="@Url.Action("LeaveHousehold", "HouseHold", new { id = ViewBag.LeaveId})">Leave</a>
             </div>
         </div>
     </div>
@@ -104,7 +107,7 @@
             <div class="modal-body">Select "Leave" below if you want to delete everything in this houseHold.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="@Url.Action("DeleteHousehold", "HouseHold", new { id = ViewBag.Id})">Leave</a>
+                <a class="btn btn-primary" href="@Url.Action("DeleteHousehold", "HouseHold", new { id = ViewBag.DeleteId})">Leave</a>
             </div>
         </div>
     </div>

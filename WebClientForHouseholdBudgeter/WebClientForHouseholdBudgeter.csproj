@@ -1926,7 +1926,6 @@
     <Content Include="Views\Account\ChangePassword.cshtml" />
     <Content Include="Views\Account\ForgetPassword.cshtml" />
     <Content Include="Views\Account\SetPassword.cshtml" />
-    <Content Include="Views\Account\InterServerError.cshtml" />
     <Content Include="Views\HouseHold\CreateHouseHold.cshtml" />
     <Content Include="Views\HouseHold\Index.cshtml" />
     <Content Include="Views\HouseHold\ListOfHouseHold.cshtml" />
