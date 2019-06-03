@@ -23,7 +23,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return View();
+                return View(formData);
             }
 
             var url = $"http://localhost:55336/api/Account/Register";
@@ -52,7 +52,11 @@ namespace WebClientForHouseholdBudgeter.Controllers
 
                 return View();
             }
-            return RedirectToAction("InternalServerError", "Account");
+            else
+            {
+                ModelState.AddModelError("", "InternalServerError");
+                return View(ModelState);
+            }              
         }
 
         [HttpGet]
@@ -66,7 +70,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View();
+                return View(formData);
             }
 
             var url = $"http://localhost:55336/Token";
@@ -119,7 +123,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
             Response.Cookies.Add(cookie);
 
             var cookie2 = new HttpCookie("UserEmail");
-            cookie.Expires = DateTime.Now.AddDays(-1d);
+            cookie2.Expires = DateTime.Now.AddDays(-1d);
             Response.Cookies.Add(cookie2);
 
             return RedirectToAction("login", "Account");
