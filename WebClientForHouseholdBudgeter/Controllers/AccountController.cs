@@ -36,6 +36,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
             var enCodeParameters = new FormUrlEncodedContent(parameters);
 
             var response = httpClient.PostAsync(url, enCodeParameters).Result;
+
             if(response.StatusCode == System.Net.HttpStatusCode.OK)              
             {    
                 return RedirectToAction("Login", "Account");
@@ -54,7 +55,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
             }
             else
             {
-                ModelState.AddModelError("", "InternalServerError");
+                ModelState.AddModelError("", "Sorry, InternalServerError was occured during processing your request");
                 return View(ModelState);
             }              
         }
@@ -82,7 +83,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
             parameters.Add(new KeyValuePair<string, string>("Password", formData.Password));
             parameters.Add(new KeyValuePair<string, string>("grant_type", grantType));
 
-           
+
 
             var enCodeParameters = new FormUrlEncodedContent(parameters);
 
@@ -111,8 +112,11 @@ namespace WebClientForHouseholdBudgeter.Controllers
                 return View();
 
             }
-
-            return RedirectToAction("InterServerError", "Account");
+            else
+            {
+                ModelState.AddModelError("", "Sorry, InternalServerError was occured during processing your request");
+                return View(ModelState);
+            }
         }
 
         [HttpGet] 
@@ -182,8 +186,11 @@ namespace WebClientForHouseholdBudgeter.Controllers
 
                 return View();
             }
-
-            return RedirectToAction("Login", "Account");
+            else
+            {
+                ModelState.AddModelError("", "Sorry, InternalServerError was occured during processing your request");
+                return View(ModelState);
+            }
         }
 
         [HttpGet]
@@ -225,8 +232,11 @@ namespace WebClientForHouseholdBudgeter.Controllers
                 }
                 return View();
             }
-
-            return RedirectToAction("SetPassword", "Account");
+            else
+            {
+                ModelState.AddModelError("", "Sorry, InternalServerError was occured during processing your request");
+                return View(ModelState);
+            }
         }
 
         [HttpGet]
@@ -270,8 +280,11 @@ namespace WebClientForHouseholdBudgeter.Controllers
                 }
                 return View();
             }
-
-            return RedirectToAction("ForgetPassword", "Account");
+            else
+            {
+                ModelState.AddModelError("", "Sorry, InternalServerError was occured during processing your request");
+                return View(ModelState);
+            }
         }
        
     }
