@@ -85,8 +85,11 @@ namespace WebClientForHouseholdBudgeter.Controllers
 
                 return View();
             }
-
-            return View("CustomErrorView");
+            else
+            {
+                ModelState.AddModelError("", "Sorry, InternalServerError was occured during processing your request");
+                return View(ModelState);
+            }
         }
 
         [HttpGet]
@@ -131,16 +134,23 @@ namespace WebClientForHouseholdBudgeter.Controllers
             httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
 
             var response = httpClient.GetAsync(url).Result;
-            if(response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
+                var data = response.Content.ReadAsStringAsync().Result;
+                var model = JsonConvert.DeserializeObject<DetailOfHouseHoldViewModel>(data);
+                return View(model);
+            }
+            else if(response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                TempData["Message"] = "Sorry, Invalid request";            
                 return RedirectToAction("ListOfHouseHold","HouseHold");
             }
-
-            var data = response.Content.ReadAsStringAsync().Result;
-
-            var model = JsonConvert.DeserializeObject<DetailOfHouseHoldViewModel>(data);
-
-            return View(model);
+            else
+            {
+                ModelState.AddModelError("", "Sorry, InternalServerError was occured during processing your request");
+                return View(ModelState);
+            }
+           
         }
 
 
@@ -219,8 +229,11 @@ namespace WebClientForHouseholdBudgeter.Controllers
 
                 return View();
             }
-
-            return View("CustomErrorView");
+            else
+            {
+                ModelState.AddModelError("", "Sorry, InternalServerError was occured during processing your request");
+                return View(ModelState);
+            }           
         }
 
         [HttpGet]
@@ -240,6 +253,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
             httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
 
             var response = httpClient.GetAsync(url).Result;
+
             if(response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
                 return RedirectToAction("ListOfHouseHold", "HouseHold");
@@ -263,6 +277,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
         {
             if (!ModelState.IsValid)
             {
+                ViewBag.HouseHoldId = formData.Id;
                 return View();
             }
             var cookie = Request.Cookies["BBCookie"];
@@ -287,7 +302,8 @@ namespace WebClientForHouseholdBudgeter.Controllers
             var response = httpClient.PostAsync(url, enCodeParameters).Result;
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                return RedirectToAction("ListOfHouseHold", "HouseHold");
+                TempData["Message"] = "Invitation email has sent successfully!";
+                return View();
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
@@ -303,8 +319,11 @@ namespace WebClientForHouseholdBudgeter.Controllers
 
                 return View();
             }
-
-            return View("CustomErrorView");
+            else
+            {
+                ModelState.AddModelError("", "Sorry, InternalServerError was occured during processing your request");
+                return View(ModelState);
+            }            
         }
 
         [HttpGet]
@@ -362,7 +381,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
             return View("CustomErrorView");
         }
 
-        [HttpGet]
+        [HttpPost]
         public ActionResult LeaveHousehold(int id)
         {
             var cookie = Request.Cookies["BBCookie"];
@@ -383,9 +402,23 @@ namespace WebClientForHouseholdBudgeter.Controllers
             {
                 return RedirectToAction("ListOfHouseHold", "HouseHold");
             }
+            else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var data = response.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<APIErrorData>(data);
 
-            return View("CustomErrorView");
-
+                foreach (var ele in result.ModelState)
+                {
+                    ModelState.AddModelError("", ele.Value[0].ToString());
+                }
+                              
+                return View();
+            }
+            else
+            {
+                ModelState.AddModelError("", "Sorry, InternalServerError was occured during processing your request");
+                return View(ModelState);
+            }
         }
 
         [HttpGet]
@@ -410,7 +443,23 @@ namespace WebClientForHouseholdBudgeter.Controllers
                 return RedirectToAction("ListOfHouseHold", "HouseHold");
             }
 
-            return View("CustomErrorView");
+            else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var data = response.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<APIErrorData>(data);
+
+                foreach (var ele in result.ModelState)
+                {
+                    ModelState.AddModelError("", ele.Value[0].ToString());
+                }
+
+                return View();
+            }
+            else
+            {
+                ModelState.AddModelError("", "Sorry, InternalServerError was occured during processing your request");
+                return View(ModelState);
+            }
         }       
 
     }
