@@ -1,0 +1,59 @@
+﻿@model  List<ListOFHouseHoldForCategoryViewModel>
+
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="py-3">
+        <h6 class="m-0 font-weight-bold text-primary">List Of HouseHold</h6>
+        @if (TempData["Message"] != null)
+        {
+            <div class="text-danger">@TempData["Message"]</div>
+        }
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered display-5" id="dataTable" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>HouseHoldName</th>
+                            <th>Description</th>
+                            <th class="text-center">Number of Category</th>
+                            <th class="text-center">Category</th>
+                            <th class="text-center">Add Category</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var ele in Model)
+                        {
+                            <tr>
+                                <td> @ele.Id</td>
+                                <td> @ele.Name</td>
+                                <td> @ele.Description</td>
+                                <td class="text-center">                               
+                                        @ele.NumberOfCategory                             
+                                </td>
+                                <td class="text-center">                                  
+                                        <a href="@Url.Action("ListOfCategory","Category", new {id =ele.Id})">
+                                            <button><i class="fas fa-list"></i></button>
+                                        </a>      
+                                </td>
+                                <td class="text-center">
+                                    @if (ele.IsOwner)
+                                    {
+                                        <a href="@Url.Action("CreateCategory", "Category", new {id =ele.Id})">
+                                            <button> <i class="fas fa-plus"></i></button>
+                                        </a>
+                                    }
+
+                                </td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>

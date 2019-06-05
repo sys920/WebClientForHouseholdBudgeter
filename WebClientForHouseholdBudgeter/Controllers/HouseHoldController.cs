@@ -12,8 +12,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
 {
     public class HouseHoldController : Controller
     {
-        // GET: HouseHold
-        
+               
         public ActionResult Index()
         {
             var cookie = Request.Cookies["BBCookie"];
@@ -53,6 +52,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
             {
                 return RedirectToAction("login", "Account");
             }
+
             var token = cookie.Values;
 
 
@@ -152,7 +152,6 @@ namespace WebClientForHouseholdBudgeter.Controllers
             }
            
         }
-
 
         [HttpGet]
         public ActionResult EditHouseHold(int id)

@@ -30,7 +30,7 @@
                 <div class="sidebar-brand-text mx-3"> Household Budgeter</div>
             </a>
 
-            <!--Project Collapse Menu -->
+            <!--HouseHold Collapse Menu -->
             <hr class="sidebar-divider my-0">
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
@@ -47,7 +47,24 @@
                 </div>
             </li>
 
-            <!--Project Collapse Menu -->
+            <!--Category Collapse Menu -->
+            <hr class="sidebar-divider my-0">
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsefour" aria-expanded="true" aria-controls="collapsefour">
+                    <i class="fas fa-layer-group"></i>
+                    <span>Category</span>
+                </a>
+
+                <div id="collapsefour" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+
+                        <a class="collapse-item" href="@Url.Action("ListOfHouseholdForCategory","Category")">List Of Category</a>
+                   
+                    </div>
+                </div>
+            </li>
+
+            <!--invitation Collapse Menu -->
             <hr class="sidebar-divider my-0">
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
@@ -64,7 +81,7 @@
 
             @if (Request.Cookies["BBCookie"] != null)
             {
-                <!--Project Collapse Menu -->
+                <!--passwrordSet Collapse Menu -->
                 <hr class="sidebar-divider my-0">
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
