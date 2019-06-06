@@ -4,46 +4,80 @@
     <div class="py-3">
         <h6 class="m-0 font-weight-bold text-primary">HouseHold Detail</h6>
     </div>
+
     <div class="card shadow mb-4">
         <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered display-5" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <td>
-                                <div>
-                                  
-                                    <span>Name : @Model.Name </span>
-                                   
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div>
-                                    Description : @Model.Description
-                                </div>                              
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div>
-                                    <span>Created Date : @Model.Created </span> &nbsp; &nbsp;
-                                    @if (Model.Updated.HasValue)
-                                    {
-                                        <span>Updated Date : @Model.Updated</span>
-                                    }
-                                </div>
-                            </td>
-                        </tr>
-                       
-                       
-                    </thead>
-                </table>
-                <div class="text-center">
 
-
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">@Model.Name</h6>
                 </div>
+                <div class="card-body">
+                    <div>
+                        Description : @Model.Description
+                    </div>
+                    <div>
+                        <span>Created Date : @Model.Created </span> &nbsp; &nbsp;
+                        @if (Model.Updated.HasValue)
+                        {
+                            <span>Updated Date : @Model.Updated</span>
+                        }
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                @foreach (var bankAccount in Model.bankAccountListForHouseholds)
+                {
+
+                    <div class="col-lg-6">
+
+                        <div class="card mb-4 py-3 border-left-primary">
+                            <div class="card-body">
+                                <div>
+                                    <span>BankAccountId : @bankAccount.BankAccountId </span> &nbsp;  <span>AccountName : @bankAccount.Name </span>
+                                </div>
+
+                                <div>
+                                    Description :@bankAccount.Description
+                                </div>
+
+                                <div class="h6 mb-0 font-weight-bold text-gray-800">
+                                    Balance :$@bankAccount.Balance
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container-fluid">
+
+                        <div class="row">
+                            @foreach (var category in bankAccount.SumOfCategories)
+
+                            {
+                                <div class="col-xl-3 col-md-6 mb-4">
+                                    <div class="card border-left-success shadow h-100 py-2">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col mr-2">
+                                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">@category.Name</div>
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">$@category.Total</div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+
+                    </div>
+
+                }
             </div>
         </div>
     </div>

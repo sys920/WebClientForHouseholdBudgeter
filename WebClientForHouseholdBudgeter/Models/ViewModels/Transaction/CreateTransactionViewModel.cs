@@ -9,6 +9,7 @@ namespace WebClientForHouseholdBudgeter.Models.ViewModels.Transaction
 {
     public class CreateTransactionViewModel
     {
+        
         public int BankAccountId { get; set; }
         public int HouseHoldId { get; set; }
 
@@ -28,5 +29,10 @@ namespace WebClientForHouseholdBudgeter.Models.ViewModels.Transaction
 
         [Required]
         public decimal Amount { get; set; }
+
+        public CreateTransactionViewModel()
+        {
+            Date = DateTime.Now;           
+        }
     }
 }

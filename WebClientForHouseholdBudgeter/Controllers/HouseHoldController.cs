@@ -140,7 +140,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
             }
             var token = cookie.Values;
 
-            var url = $"http://localhost:55336/api/Household/GetById/{id}";
+            var url = $"http://localhost:55336/api/Household/GetHouseHoldDetail/{id}";
 
             var httpClient = new HttpClient();
 
@@ -160,10 +160,9 @@ namespace WebClientForHouseholdBudgeter.Controllers
             }
             else
             {
-                ModelState.AddModelError("", "Sorry, InternalServerError was occured during processing your request");
-                return View(ModelState);
+                ModelState.AddModelError("Error", "Sorry, Internal server Error occured");
+                return RedirectToAction("Error", "Home");
             }
-           
         }
 
         [HttpGet]
