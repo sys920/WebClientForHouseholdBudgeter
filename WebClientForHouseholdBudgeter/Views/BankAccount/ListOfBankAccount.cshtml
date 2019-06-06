@@ -1,0 +1,80 @@
+﻿@model  List<ListOfBankAccountViewModel>
+
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="py-3">
+        <h6 class="m-0 font-weight-bold text-primary">List of BankAccount</h6>
+        @if (TempData["Message"] != null)
+        {
+            <div class="text-danger">@TempData["Message"]</div>
+        }
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered display-5" id="dataTable" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>BankAcccount</th>                      
+                            <th>Balance</th>
+                            <th>#Transaction</th>
+                            <th>Add Transaction</th>
+                            <th>ReCaculate</th>
+                            <th>Edit</th>
+                            <th>Del</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var ele in Model)
+                        {
+                            <tr>
+                                <td>@ele.Id</td>
+                                <td><a href="@Url.Action("DetailOfBankAccount","BankAccount", new {id =ele.Id})">@ele.Name</a></td>                               
+                                <td>$@ele.Balance</td>
+                                <th class="text-center">
+                                    <a href="@Url.Action("ListOfTransaction", "Transaction", new {id =ele.Id,  householdId=ele.HouseHoldId})">@ele.NumberOfTransaction</a></th>
+
+                                <td class="text-center">
+                                    <a href="@Url.Action("CreateTransaction", "Transaction", new {id =ele.Id, householdId=ele.HouseHoldId})">
+                                        <button> <i class="fas fa-plus"></i></button>
+                                    </a>
+                                </td>
+                                 <td class="text-center">
+
+                                    @if (ele.IsOwner)
+                                    {
+                                        <a href="@Url.Action("CalcurateBalance", "BankAccount", new {id =ele.Id, householdId=ele.HouseHoldId})">
+                                            <button><i class="fas fa-redo"></i></button>
+                                        </a>
+                                    }
+
+                                </td>
+                                <td class="text-center">
+
+                                    @if (ele.IsOwner)
+                                    {
+                                        <a href="@Url.Action("EditBankAccount", "BankAccount", new {id =ele.Id, householdId=ele.HouseHoldId})">
+                                            <button><i class="fas fa-edit"></i></button>
+                                        </a>
+                                    }
+
+                                </td>
+
+                                <td class="text-center">
+                                    @if (ele.IsOwner)
+                                    {
+                                        <form method="post" action="@Url.Action("DeleteBankAccount", "BankAccount", new {id =ele.Id, householdId=ele.HouseHoldId})">
+                                            <button type="submit"><i class="fas fa-trash-alt"></i></button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>

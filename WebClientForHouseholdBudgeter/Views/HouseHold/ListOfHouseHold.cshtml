@@ -18,7 +18,7 @@
                             <th>Id</th>
                             <th>Name</th>
                             <th>Description</th>
-                            <th>Users</th>
+                            <th>#User</th>
                             <th>Invite user</th>
                             <th>Edit</th>
                             <th>Leave</th>
@@ -61,7 +61,7 @@
                                 <td class="text-center">
                                     @if (ele.IsOwner)
                                     {                                       
-                                        <form method="post" action="@Url.Action("DeleteHousehold", "HouseHold", new {id =ele.Id})">
+                                        <form method="post" action="@Url.Action("DeleteHouseHold", "HouseHold", new {id =ele.Id})">
                                             <button type="submit"><i class="fas fa-trash-alt"></i></button>
                                         </form>
                                     }

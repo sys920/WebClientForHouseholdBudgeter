@@ -1,4 +1,4 @@
-﻿@model  List<ListOFHouseHoldForCategoryViewModel>
+﻿@model  List<ListOFHouseHoldForBankAccountViewModel>
 
 <div class="container-fluid">
     <!-- Page Heading -->
@@ -18,8 +18,10 @@
                             <th>Id</th>
                             <th>HouseHoldName</th>
                             <th>Description</th>
-                            <th class="text-center">#Category</th> 
-                            <th class="text-center">Add Category</th>
+                            <th>Created</th>
+                            <th>Updated</th>
+                            <th class="text-center">#BankAccount</th>
+                            <th class="text-center">Add BankAccount</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -29,14 +31,16 @@
                                 <td> @ele.Id</td>
                                 <td> @ele.Name</td>
                                 <td> @ele.Description</td>
+                                <td> @ele.Created.ToString("MM/dd/yyyy")</td>
+                                <td> @(ele.Updated!= null ? ele.Updated.Value.ToString("MM/dd/yyyy") : "")</td>
                                 <td class="text-center">
-                                    <a href="@Url.Action("ListOfCategory","Category", new {id =ele.Id})">@ele.NumberOfCategory </a>
+                                    <a href="@Url.Action("ListOfBankAccount","BankAccount", new {id =ele.Id})">@ele.NumberOfBankAccount</a>
                                 </td>
-                               
+
                                 <td class="text-center">
                                     @if (ele.IsOwner)
                                     {
-                                        <a href="@Url.Action("CreateCategory", "Category", new {id =ele.Id})">
+                                        <a href="@Url.Action("CreateBankAccount", "BankAccount", new {id =ele.Id})">
                                             <button> <i class="fas fa-plus"></i></button>
                                         </a>
                                     }

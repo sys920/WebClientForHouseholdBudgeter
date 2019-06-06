@@ -121,8 +121,11 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BankAccountController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HouseHoldController.cs" />
+    <Compile Include="Controllers\TransactionController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -134,6 +137,12 @@
     <Compile Include="Models\ViewModels\Account\LoginViewModel.cs" />
     <Compile Include="Models\ViewModels\Account\RegisterUserViewModel.cs" />
     <Compile Include="Models\ViewModels\Account\SetPasswordViewModel.cs" />
+    <Compile Include="Models\ViewModels\BankAccount\CreateBankAccountViewModel.cs" />
+    <Compile Include="Models\ViewModels\BankAccount\DetailOfBankAccountViewModel.cs" />
+    <Compile Include="Models\ViewModels\BankAccount\EditBankAccountViewModel.cs" />
+    <Compile Include="Models\ViewModels\BankAccount\ListOfBankAccountViewModel.cs" />
+    <Compile Include="Models\ViewModels\BankAccount\ListOFHouseHoldForBankAccountViewModel.cs" />
+    <Compile Include="Models\ViewModels\Category\CategoryNameList.cs" />
     <Compile Include="Models\ViewModels\Category\EditCategoryViewModel.cs" />
     <Compile Include="Models\ViewModels\Category\CreateCategoryViewModel.cs" />
     <Compile Include="Models\ViewModels\Category\ListOFHouseHoldForCategoryViewModel.cs" />
@@ -145,6 +154,9 @@
     <Compile Include="Models\ViewModels\HouserHold\ListOfInvitation.cs" />
     <Compile Include="Models\ViewModels\HouserHold\UsersOfHouseHoldViewModel.cs" />
     <Compile Include="Models\ViewModels\HouserHold\ListOfHouseHoldViewModel.cs" />
+    <Compile Include="Models\ViewModels\Transaction\CreateTransactionViewModel.cs" />
+    <Compile Include="Models\ViewModels\Transaction\EditTransactionViewModel.cs" />
+    <Compile Include="Models\ViewModels\Transaction\TransactionListViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -1945,6 +1957,15 @@
     <Content Include="Views\Category\ListOfHouseHoldForCategory.cshtml" />
     <Content Include="Views\Category\CreateCategory.cshtml" />
     <Content Include="Views\Category\EditCategory.cshtml" />
+    <Content Include="Views\BankAccount\CreateBankAccount.cshtml" />
+    <Content Include="Views\BankAccount\ListOfHouseHoldForBankAccount.cshtml" />
+    <Content Include="Views\BankAccount\ListOfBankAccount.cshtml" />
+    <Content Include="Views\BankAccount\EditBankAccount.cshtml" />
+    <Content Include="Views\Transaction\CreateTransaction.cshtml" />
+    <Content Include="Views\Home\Error.cshtml" />
+    <Content Include="Views\Transaction\ListOfTransaction.cshtml" />
+    <Content Include="Views\BankAccount\DetailOfBankAccount.cshtml" />
+    <Content Include="Views\Transaction\EditTransaction.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

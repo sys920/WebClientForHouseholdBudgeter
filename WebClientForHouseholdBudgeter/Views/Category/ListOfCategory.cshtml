@@ -27,33 +27,33 @@
                     <tbody>
                         @foreach (var ele in Model)
                         {
-                            <tr>
-                                <td>@ele.Id</td>
-                                <td>@ele.Name</td>
-                                <td>@ele.Description</td>
-                                <td>@ele.Created</td>
-                                <td>@ele.Updated</td>
+                        <tr>
+                            <td>@ele.Id</td>
+                            <td>@ele.Name</td>
+                            <td>@ele.Description</td>
+                            <td> @ele.Created.ToString("MM/dd/yyyy")</td>
+                            <td> @(ele.Updated != null ? ele.Updated.Value.ToString("MM/dd/yyyy") : "")</td>
 
-                                <td class="text-center">                                   
+                            <td class="text-center">
 
-                                    @if (ele.IsOwner)
-                                    {
-                                        <a href="@Url.Action("EditCategory", "Category", new {id =ele.Id, householdId=ele.HouseHoldId})">
-                                            <button><i class="fas fa-edit"></i></button>
-                                        </a>
-                                    }
+                                @if (ele.IsOwner)
+                                {
+                                    <a href="@Url.Action("EditCategory", "Category", new {id =ele.Id, householdId=ele.HouseHoldId})">
+                                        <button><i class="fas fa-edit"></i></button>
+                                    </a>
+                                }
 
-                                </td>
+                            </td>
 
-                                <td class="text-center">
-                                    @if (ele.IsOwner)
-                                    {
-                                        <form method="post" action="@Url.Action("DeleteCategory", "Category", new {id =ele.Id, householdId=ele.HouseHoldId})">
-                                            <button type="submit"><i class="fas fa-trash-alt"></i></button>
-                                        </form>
-                                    }
-                                </td>
-                            </tr>
+                            <td class="text-center">
+                                @if (ele.IsOwner)
+                                {
+                                    <form method="post" action="@Url.Action("DeleteCategory", "Category", new {id =ele.Id, householdId=ele.HouseHoldId})">
+                                        <button type="submit"><i class="fas fa-trash-alt"></i></button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
                         }
                     </tbody>
                 </table>

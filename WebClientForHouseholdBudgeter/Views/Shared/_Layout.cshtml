@@ -37,47 +37,42 @@
                     <i class="fas fa-home"></i>
                     <span>HouseHold</span>
                 </a>
-
                 <div id="collapseOne" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
 
                         <a class="collapse-item" href="@Url.Action("ListOfHouseHold","HouseHold")">List Of HouseHold</a>
                         <a class="collapse-item" href="@Url.Action("CreateHouseHold","HouseHold")">+ Create HouseHold</a>
                     </div>
+
+                    <div class="bg-white py-2 collapse-inner rounded">
+
+                        <a class="collapse-item" href="@Url.Action("ListOfHouseholdForCategory","Category")">List Of Category</a>
+                    </div>
+
+                    <div class="bg-white py-2 collapse-inner rounded">
+
+                        <a class="collapse-item" href="@Url.Action("ListOfInvitation","HouseHold")">Invitations(Receive)</a>
+                    </div>
+                    
                 </div>
             </li>
 
-            <!--Category Collapse Menu -->
+            <!--BankAccount Collapse Menu -->
             <hr class="sidebar-divider my-0">
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsefour" aria-expanded="true" aria-controls="collapsefour">
-                    <i class="fas fa-layer-group"></i>
-                    <span>Category</span>
+                    <i class="fas fa-coins"></i>
+                    <span>BankAccount</span>
                 </a>
 
                 <div id="collapsefour" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
 
-                        <a class="collapse-item" href="@Url.Action("ListOfHouseholdForCategory","Category")">List Of Category</a>
-                   
+                        <a class="collapse-item" href="@Url.Action("ListOfHouseholdForBankAccount","BankAccount")">List Of BankAccount</a>
+
                     </div>
                 </div>
             </li>
-
-            <!--invitation Collapse Menu -->
-            <hr class="sidebar-divider my-0">
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fab fa-invision"></i>
-                    <span>Invitation</span>
-                </a>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="@Url.Action("ListOfInvitation","HouseHold")">Invitations(Receive)</a>
-                    </div>
-                </div>
-            </li>
-
 
             @if (Request.Cookies["BBCookie"] != null)
             {

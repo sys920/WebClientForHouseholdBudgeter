@@ -1,0 +1,69 @@
+﻿@model CreateTransactionViewModel
+@{
+    ViewBag.Title = "CreateTransaction";
+}
+
+<div class="container-fluid">
+
+    <div class="py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Create Transaction</h6>
+        <div class="text-danger">@Html.ValidationSummary(false)</div>
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+
+                <form method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="BankAccountId" value=@ViewBag.BankAccountId />
+                    <input type="hidden" name="HouseHoldId" value=@ViewBag.HouseHoldId />
+                    <table class="table table-bordered display-5" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <td>
+                                    <div>
+                                        @Html.LabelFor(Model => Model.Name, "Name : ")
+                                        @Html.TextBoxFor(Model => Model.Name, new { @class = "form-control  ", placeholder = "Type Transaction name" })
+                                    </div>
+                                    <div class="text-danger"> @Html.ValidationMessageFor(Model => Model.Name) </div>
+                                    <div>&nbsp;</div>
+
+                                    <div>
+                                        @Html.LabelFor(Model => Model.Description, "Description : ")
+                                        @Html.TextBoxFor(Model => Model.Description, new { @class = "form-control  ", placeholder = "Type Transaction Description" })
+                                    </div>
+                                    <div class="text-danger"> @Html.ValidationMessageFor(Model => Model.Description) </div>
+                                    <div>&nbsp;</div>
+
+                                    <div>
+                                        @Html.LabelFor(Model => Model.Date, "Date : ")
+                                        @Html.TextBoxFor(Model => Model.Date, new { @class = "form-control" })
+                                    </div>
+                                    <div class="text-danger"> @Html.ValidationMessageFor(Model => Model.Date) </div>
+                                    <div>&nbsp;</div>
+
+                                    <div>
+                                        @Html.LabelFor(Model => Model.CategoryId, "Select category:")
+                                        @Html.DropDownListFor(Model => Model.CategoryId, new SelectList(Model.CategoryNameList, "Id", "Name"), "- Select -", new { @class = "form-control" })
+                                    </div>
+                                    <div class="text-danger"> @Html.ValidationMessageFor(Model => Model.CategoryId) </div>
+                                    <div>&nbsp;</div>
+
+                                    <div>
+                                        @Html.LabelFor(Model => Model.Amount, "Amoumt : ")
+                                        @Html.TextBoxFor(Model => Model.Amount, new { @class = "form-control" })
+                                    </div>
+                                    <div class="text-danger"> @Html.ValidationMessageFor(Model => Model.Amount) </div>
+                                    <div>&nbsp;</div>
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">SAVE</button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

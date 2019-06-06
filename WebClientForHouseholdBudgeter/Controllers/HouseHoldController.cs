@@ -109,11 +109,24 @@ namespace WebClientForHouseholdBudgeter.Controllers
 
             httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
 
-            var data = httpClient.GetStringAsync(url).Result;
+            var response = httpClient.GetAsync(url).Result;
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var data = response.Content.ReadAsStringAsync().Result;
+                var model = JsonConvert.DeserializeObject<List<ListOfHouseHoldViewModel>>(data);
 
-            var model = JsonConvert.DeserializeObject<List<ListOfHouseHoldViewModel>>(data);
+                return View(model);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
 
-            return View(model);
+                return RedirectToAction("ListOfHouseHold", "HouseHold");
+            }
+            else
+            {
+                ModelState.AddModelError("", "Sorry, InternalServerError was occured during processing your request");
+                return View(ModelState);
+            }
         }
 
         [HttpGet]
@@ -420,7 +433,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpPost]
         public ActionResult DeleteHouseHold(int id)
         {
             var cookie = Request.Cookies["BBCookie"];

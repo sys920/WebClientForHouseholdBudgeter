@@ -1,0 +1,67 @@
+﻿@model  List<TransactionListViewModel>
+
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="py-3">
+        <h6 class="m-0 font-weight-bold text-primary">List of Transaction</h6>
+        @if (TempData["Message"] != null)
+        {
+            <div class="text-danger">@TempData["Message"]</div>
+        }
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered display-5" id="dataTable" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Date</th>
+                            <th>Category</th>
+                            <th>Amount</th>
+                            <th>Created</th>
+                            <th>Updated</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var ele in Model)
+                        {
+                            <tr>
+                                <td>@ele.Name</td>
+                                <td>@ele.Description</td>
+                                <td>@ele.Date.ToString("MM/dd/yyyy")</td>
+                                <td>@ele.Category</td>
+                                <td>$@ele.Amount</td>
+                                <td> @ele.Created.ToString("MM/dd/yyyy")</td>
+                                <td> @(ele.Updated != null ? ele.Updated.Value.ToString("MM/dd/yyyy") : "")</td>
+                                <td class="text-center">
+                                    @if (ele.IsOwner)
+                                    {
+                                        <a href="@Url.Action("EditTransaction", "Transaction", new {id =ele.TransactionId, houseHoldId = ViewBag.HouseHoldId})">
+                                            <button><i class="fas fa-edit"></i></button>
+                                        </a>
+                                    }
+
+                                </td>
+
+                                <td class="text-center">
+                                    @if (ele.IsOwner)
+                                    {
+                                        <form method="post" action="@Url.Action("DeleteTransaction", "Transaction",new {id =ele.TransactionId})">
+                                            <button type="submit"><i class="fas fa-trash-alt"></i></button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
