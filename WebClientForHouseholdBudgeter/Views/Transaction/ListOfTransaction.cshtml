@@ -24,6 +24,7 @@
                             <th>Updated</th>
                             <th>Edit</th>
                             <th>Delete</th>
+                            <th>Void</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -34,7 +35,15 @@
                                 <td>@ele.Description</td>
                                 <td>@ele.Date.ToString("MM/dd/yyyy")</td>
                                 <td>@ele.Category</td>
-                                <td>$@ele.Amount</td>
+                                @if (ele.Void == false)
+                                {
+                                    <td>$@ele.Amount</td>
+                                }
+                                else
+                                {
+                                    <td class="text-danger"><del>$@ele.Amount</del></td>
+                                }
+
                                 <td> @ele.Created.ToString("MM/dd/yyyy")</td>
                                 <td> @(ele.Updated != null ? ele.Updated.Value.ToString("MM/dd/yyyy") : "")</td>
                                 <td class="text-center">
@@ -50,8 +59,18 @@
                                 <td class="text-center">
                                     @if (ele.IsOwner)
                                     {
-                                        <form method="post" action="@Url.Action("DeleteTransaction", "Transaction",new {id =ele.TransactionId})">
+                                        <form method="post" action="@Url.Action("DeleteTransaction", "Transaction",new {id =ele.TransactionId, bankAccountId=ele.BankAccountId, houseHoldId=ViewBag.HouseHoldId})">
                                             <button type="submit"><i class="fas fa-trash-alt"></i></button>
+                                        </form>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @if (ele.IsOwner && ele.Void == false)
+                                    {
+
+
+                                        <form method="post" action="@Url.Action("VoidTransaction", "Transaction",new {id =ele.TransactionId, bankAccountId=ele.BankAccountId, houseHoldId=ViewBag.HouseHoldId})">
+                                            <button type="submit"><i class="fas fa-strikethrough"></i></button>
                                         </form>
                                     }
                                 </td>

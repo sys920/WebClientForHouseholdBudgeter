@@ -53,7 +53,7 @@
 
                         <a class="collapse-item" href="@Url.Action("ListOfInvitation","HouseHold")">Invitations(Receive)</a>
                     </div>
-                    
+
                 </div>
             </li>
 
@@ -112,8 +112,8 @@
 
                     <!-- Topbar Search -->
                     <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">                          
-                            <div class="input-group-append">                                
+                        <div class="input-group">
+                            <div class="input-group-append">
                             </div>
                         </div>
                     </form>
@@ -178,6 +178,8 @@
     @RenderSection("scripts", required: false)
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Styles.Render("~/Content/cssjqryUi")
 
     <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
     <!-- Bootstrap core JavaScript-->
@@ -191,12 +193,28 @@
     <!-- Page level plugins -->
     <script src="~/vendor/datatables/jquery.dataTables.min.js"></script>
     <script src="~/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="~/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+
+
+
+
     <script type="text/javascript">
 
         $(document).ready(function () {
             $('#dataTable').DataTable();
         });
 
+        $(document).ready(function () {
+            $('#date').datepicker({
+                dateFormat: "dd/M/yy",
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-60:+0"
+            });
+
+        });
     </script>
 </body>
 </html>

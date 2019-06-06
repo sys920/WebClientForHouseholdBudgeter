@@ -14,7 +14,7 @@
             <div class="table-responsive">
 
                 <form method="post" enctype="multipart/form-data">
-                    <input type="hidden" name="BankAccountId" value=@ViewBag.BankAccountId />
+                    <input type="hidden" name="BankAccountId" value=@Model.BankAccountId />
                     <input type="hidden" name="HouseHoldId" value=@ViewBag.HouseHoldId />
                     <table class="table table-bordered display-5" cellspacing="0">
                         <thead>
@@ -36,7 +36,7 @@
 
                                     <div>
                                         @Html.LabelFor(Model => Model.Date, "Date : ")
-                                        @Html.TextBoxFor(Model => Model.Date, new { @class = "form-control" })
+                                        @Html.TextBoxFor(Model => Model.Date, new {  id = "date",@class = "form-control" })
                                     </div>
                                     <div class="text-danger"> @Html.ValidationMessageFor(Model => Model.Date) </div>
                                     <div>&nbsp;</div>

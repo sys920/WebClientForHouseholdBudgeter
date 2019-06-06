@@ -172,8 +172,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
             {
                 return RedirectToAction("ListOfHouseHoldForBankAccount", "BankAccount");
             }
-
-            ViewBag.BankAccountId = id;
+                        
             ViewBag.HouseHoldId = houseHoldId;
 
             var cookie = Request.Cookies["BBCookie"];
@@ -216,5 +215,144 @@ namespace WebClientForHouseholdBudgeter.Controllers
             
         }
 
+        [HttpPost]
+        public ActionResult EditTransaction(int? id, EditTransactionViewModel formData)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("ListOfTransaction", "Transation", new { id = formData.BankAccountId });
+            }
+
+            var cookie = Request.Cookies["BBCookie"];
+            if (cookie == null)
+            {
+                return RedirectToAction("login", "Account");
+            }
+
+            var token = cookie.Values;
+
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+
+            var url_Category = $"http://localhost:55336/api/Category/GetAllCategory/{formData.HouseHoldId}";
+            var response_Category = httpClient.GetAsync(url_Category).Result;
+            var data_Category = response_Category.Content.ReadAsStringAsync().Result;
+            var categoryNameList = JsonConvert.DeserializeObject<List<CategoryNameList>>(data_Category);
+            formData.CategoryNameList = categoryNameList;
+
+            if (!ModelState.IsValid)
+            {
+                return View(formData);
+            }
+
+            var url = $"http://localhost:55336/api/Transaction/Update/{id}";
+      
+            var parameters = new List<KeyValuePair<string, string>>();
+            parameters.Add(new KeyValuePair<string, string>("Name", formData.Name));
+            parameters.Add(new KeyValuePair<string, string>("Description", formData.Description));
+            parameters.Add(new KeyValuePair<string, string>("Date", formData.Date.ToString()));
+            parameters.Add(new KeyValuePair<string, string>("CategoryId", formData.CategoryId.ToString()));
+            parameters.Add(new KeyValuePair<string, string>("Amount", formData.Amount.ToString()));
+
+            var enCodeParameters = new FormUrlEncodedContent(parameters);
+
+            var response = httpClient.PutAsync(url, enCodeParameters).Result;
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+
+                return RedirectToAction("ListOfTransaction", "Transaction", new { id = formData.BankAccountId, houseHoldId=formData.HouseHoldId });
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var data = response.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<APIErrorData>(data);
+
+                foreach (var ele in result.ModelState)
+                {
+                    ModelState.AddModelError("", ele.Value[0].ToString());
+                }
+
+                return View(formData);
+            }
+            else            
+            {
+                return RedirectToAction("Error", "Home");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult DeleteTransaction(int? id, int? bankAccountId, int? houseHoldId)
+        {
+            if (id == null || bankAccountId == null || houseHoldId ==null)
+            {
+                return RedirectToAction("ListOfHouseHoldForBankAccount", "BankAccount");
+            }
+
+            var cookie = Request.Cookies["BBCookie"];
+
+            if (cookie == null)
+            {
+                return RedirectToAction("login", "Account");
+            }
+            var token = cookie.Value;
+
+            var url = $"http://localhost:55336/api/Transaction/Delete/{id}";
+
+            var httpClient = new HttpClient();
+
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+
+            var response = httpClient.DeleteAsync(url).Result;
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return RedirectToAction("ListOfTransaction", "Transaction", new { id = bankAccountId, houseHoldId = houseHoldId });
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+
+                return RedirectToAction("ListOfHouseHoldForBankAccount", "BankAccount");
+            }
+            else
+            {
+                return RedirectToAction("Error", "Home");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult VoidTransaction(int? id, int? bankAccountId, int? houseHoldId)
+        {
+            if (id == null || bankAccountId == null || houseHoldId == null)
+            {
+                return RedirectToAction("ListOfHouseHoldForBankAccount", "BankAccount");
+            }
+
+            var cookie = Request.Cookies["BBCookie"];
+
+            if (cookie == null)
+            {
+                return RedirectToAction("login", "Account");
+            }
+            var token = cookie.Value;
+
+            var url = $"http://localhost:55336/api/Transaction/Void/{id}";
+
+            var httpClient = new HttpClient();
+
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+            var response = httpClient.GetAsync(url).Result;
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return RedirectToAction("ListOfTransaction", "Transaction", new { id = bankAccountId, houseHoldId = houseHoldId });
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+
+                return RedirectToAction("ListOfHouseHoldForBankAccount", "BankAccount");
+            }
+            else
+            {
+                return RedirectToAction("Error", "Home");
+            }
+        }
     }
 }

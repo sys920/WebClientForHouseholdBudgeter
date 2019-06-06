@@ -36,7 +36,8 @@
 
                                     <div>
                                         @Html.LabelFor(Model => Model.Date, "Date : ")
-                                        @Html.TextBoxFor(Model => Model.Date, new { @class = "form-control" })
+                                        @Html.TextBoxFor(Model => Model.Date, new { id = "date", @class = "form-control" })
+
                                     </div>
                                     <div class="text-danger"> @Html.ValidationMessageFor(Model => Model.Date) </div>
                                     <div>&nbsp;</div>

@@ -17,5 +17,7 @@ namespace WebClientForHouseholdBudgeter.Models.ViewModels.Transaction
         public DateTime? Updated { get; set; }
         public bool Void { get; set; }
         public bool IsOwner { get; set; }
+
+        public int BankAccountId { get; set; }
     }
 }
