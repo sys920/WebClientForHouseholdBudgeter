@@ -6,69 +6,41 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Mvc;
 using WebClientForHouseholdBudgeter.Models;
+using WebClientForHouseholdBudgeter.Models.Filters;
 using WebClientForHouseholdBudgeter.Models.ViewModels.HouserHold;
 
 namespace WebClientForHouseholdBudgeter.Controllers
 {
+    [CustomAuthorizationFilter]
     public class HouseHoldController : Controller
     {
-               
+   
         public ActionResult Index()
-        {
-            var cookie = Request.Cookies["BBCookie"];
-
-            if (cookie == null)
-            {
-                return RedirectToAction("login", "Account");
-            }
-
+        {  
             return View();
         }
 
         [HttpGet]
         public ActionResult CreateHouseHold()
         {
-            var cookie = Request.Cookies["BBCookie"];
-
-            if (cookie == null)
-            {
-                return RedirectToAction("login", "Account");
-            }
-
             return View();
         }
-
+        
         [HttpPost]
         public ActionResult CreateHouseHold(CreateHouseHoldViewModel formData)
-        {
-            if(!ModelState.IsValid)
-            {
-                return View();
-            }
-
-            var cookie = Request.Cookies["BBCookie"];
-
-            if (cookie == null)
-            {
-                return RedirectToAction("login", "Account");
-            }
-
-            var token = cookie.Values;
-
-
-            var url = $"http://localhost:55336/api/Household/Create";
-
+        {  
             var httpClient = new HttpClient();
 
-            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {ViewBag.Token}");
 
             var parameters = new List<KeyValuePair<string, string>>();
             parameters.Add(new KeyValuePair<string, string>("Name", formData.Name));
-            parameters.Add(new KeyValuePair<string, string>("Description", formData.Description));           
-
+            parameters.Add(new KeyValuePair<string, string>("Description", formData.Description)); 
+            
             var enCodeParameters = new FormUrlEncodedContent(parameters);
-
+            var url = $"http://localhost:55336/api/Household/Create";                 
             var response = httpClient.PostAsync(url, enCodeParameters).Result;
+
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 return RedirectToAction("ListOfHouseHold", "HouseHold");
@@ -86,29 +58,19 @@ namespace WebClientForHouseholdBudgeter.Controllers
                 return View();
             }
             else
-            {
-                ModelState.AddModelError("", "Sorry, InternalServerError was occured during processing your request");
-                return View(ModelState);
+            {                
+                return RedirectToAction("Error", "Home");
             }
         }
 
         [HttpGet]
         public ActionResult ListOfHouseHold()
-        {
-            var cookie = Request.Cookies["BBCookie"];
-
-            if (cookie == null)
-            {
-                return RedirectToAction("login", "Account");
-            }
-            var token = cookie.Values;
-
-            var url = $"http://localhost:55336/api/Household/GetAll";
-
+        {    
             var httpClient = new HttpClient();
 
-            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {ViewBag.Token}");
 
+            var url = $"http://localhost:55336/api/Household/GetAll";
             var response = httpClient.GetAsync(url).Result;
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
@@ -124,29 +86,20 @@ namespace WebClientForHouseholdBudgeter.Controllers
             }
             else
             {
-                ModelState.AddModelError("", "Sorry, InternalServerError was occured during processing your request");
-                return View(ModelState);
+                return RedirectToAction("Error", "Home");
             }
         }
 
         [HttpGet]
         public ActionResult DetailOfHouseHold(int id)
         {
-            var cookie = Request.Cookies["BBCookie"];
-
-            if (cookie == null)
-            {
-                return RedirectToAction("login", "Account");
-            }
-            var token = cookie.Values;
-
-            var url = $"http://localhost:55336/api/Household/GetHouseHoldDetail/{id}";
-
             var httpClient = new HttpClient();
 
-            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {ViewBag.Token}");
 
+            var url = $"http://localhost:55336/api/Household/GetHouseHoldDetail/{id}";
             var response = httpClient.GetAsync(url).Result;
+
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var data = response.Content.ReadAsStringAsync().Result;
@@ -160,39 +113,36 @@ namespace WebClientForHouseholdBudgeter.Controllers
             }
             else
             {
-                ModelState.AddModelError("Error", "Sorry, Internal server Error occured");
                 return RedirectToAction("Error", "Home");
             }
         }
 
         [HttpGet]
         public ActionResult EditHouseHold(int id)
-        {
-            var cookie = Request.Cookies["BBCookie"];
-
-            if (cookie == null)
-            {
-                return RedirectToAction("login", "Account");
-            }
-            var token = cookie.Value;
-
-            var url = $"http://localhost:55336/api/HouseHold/GetByOwnerId/{id}";
-
+        {  
             var httpClient = new HttpClient();
 
-            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-           
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {ViewBag.Token}");
+
+            var url = $"http://localhost:55336/api/HouseHold/GetByOwnerId/{id}";
             var response = httpClient.GetAsync(url).Result;
-            if(response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+
+            if(response.StatusCode == System.Net.HttpStatusCode.OK)
             {
+                var data = response.Content.ReadAsStringAsync().Result;
+                var model = JsonConvert.DeserializeObject<EditHouseHoldeViewModel>(data);
+
+                return View(model);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                TempData["Message"] = "Sorry, Invalid request";
                 return RedirectToAction("ListOfHouseHold", "HouseHold");
             }
-                  
-            var data = response.Content.ReadAsStringAsync().Result;
-
-            var model = JsonConvert.DeserializeObject<EditHouseHoldeViewModel>(data);
-
-            return View(model);
+            else
+            {
+                return RedirectToAction("Error", "Home");
+            }   
         }
 
         [HttpPost]
@@ -200,30 +150,21 @@ namespace WebClientForHouseholdBudgeter.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View();
+                return View(formData);
             }
-            var cookie = Request.Cookies["BBCookie"];
-
-            if (cookie == null)
-            {
-                return RedirectToAction("login", "Account");
-            }
-            var token = cookie.Value;
-
-            var url = $"http://localhost:55336/api/HouseHold/Update/{formData.Id}";
-
-
+           
             var httpClient = new HttpClient();
 
-            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {ViewBag.Token}");
 
             var parameters = new List<KeyValuePair<string, string>>();
             parameters.Add(new KeyValuePair<string, string>("Name", formData.Name));
             parameters.Add(new KeyValuePair<string, string>("Description", formData.Description));
 
             var enCodeParameters = new FormUrlEncodedContent(parameters);
-
+            var url = $"http://localhost:55336/api/HouseHold/Update/{formData.Id}";
             var response = httpClient.PutAsync(url, enCodeParameters).Result;
+
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 return RedirectToAction("ListOfHouseHold", "HouseHold");
@@ -238,41 +179,40 @@ namespace WebClientForHouseholdBudgeter.Controllers
                     ModelState.AddModelError("", ele.Value[0].ToString());
                 }
 
-                return View();
+                return View(formData);
             }
             else
             {
-                ModelState.AddModelError("", "Sorry, InternalServerError was occured during processing your request");
-                return View(ModelState);
+                return RedirectToAction("Error", "Home");
             }           
         }
 
         [HttpGet]
         public ActionResult UsersOfHouseHold(int id)
         {
-            var cookie = Request.Cookies["BBCookie"];
-            if (cookie == null)
-            {
-                return RedirectToAction("login", "Account");
-            }
-            var token = cookie.Value;
-
-            var url = $"http://localhost:55336/api/Household/GetAllMember/{id}";
-
             var httpClient = new HttpClient();
 
-            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {ViewBag.Token}");
 
+            var url = $"http://localhost:55336/api/Household/GetAllMember/{id}";
             var response = httpClient.GetAsync(url).Result;
 
-            if(response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
+                var data = response.Content.ReadAsStringAsync().Result;
+                var models = JsonConvert.DeserializeObject<List<UsersOfHouseHoldViewModel>>(data);
+                return View(models);
+
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                TempData["Message"] = "Sorry, Invalid request";
                 return RedirectToAction("ListOfHouseHold", "HouseHold");
             }
-
-            var data = response.Content.ReadAsStringAsync().Result;
-            var models = JsonConvert.DeserializeObject<List<UsersOfHouseHoldViewModel>>(data);
-            return View(models);
+            else
+            {
+                return RedirectToAction("Error", "Home");
+            }
         }
 
         [HttpGet]
@@ -289,28 +229,21 @@ namespace WebClientForHouseholdBudgeter.Controllers
             if (!ModelState.IsValid)
             {
                 ViewBag.HouseHoldId = formData.Id;
-                return View();
-            }
-            var cookie = Request.Cookies["BBCookie"];
-            if (cookie == null)
-            {
-                return RedirectToAction("login", "Account");
-            }
-            var token = cookie.Value;
 
-            var url = $"http://localhost:55336/api/Household/InviteUser/{formData.Id}";
-
+                return View(formData);
+            }
 
             var httpClient = new HttpClient();
 
-            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {ViewBag.Token}");
 
             var parameters = new List<KeyValuePair<string, string>>();           
             parameters.Add(new KeyValuePair<string, string>("Email", formData.Email));
 
             var enCodeParameters = new FormUrlEncodedContent(parameters);
-
+            var url = $"http://localhost:55336/api/Household/InviteUser/{formData.Id}";
             var response = httpClient.PostAsync(url, enCodeParameters).Result;
+
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 TempData["Message"] = "Invitation email has sent successfully!";
@@ -328,148 +261,114 @@ namespace WebClientForHouseholdBudgeter.Controllers
 
                 ViewBag.HouseHoldId = formData.Id;
 
-                return View();
+                return View(formData);
             }
             else
             {
-                ModelState.AddModelError("", "Sorry, InternalServerError was occured during processing your request");
-                return View(ModelState);
+                return RedirectToAction("Error", "Home");
             }            
         }
 
         [HttpGet]
         public ActionResult ListOfInvitation()
         {
-            var cookie = Request.Cookies["BBCookie"];
-            if (cookie == null)
-            {
-                return RedirectToAction("login", "Account");
-            }
-            var token = cookie.Value;
-
-            var url = $"http://localhost:55336/api/Household/GetAllInvitaion";
-
             var httpClient = new HttpClient();
 
-            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {ViewBag.Token}");
 
+            var url = $"http://localhost:55336/api/Household/GetAllInvitaion";
             var response = httpClient.GetAsync(url).Result;
-            if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
+                var data = response.Content.ReadAsStringAsync().Result;
+                var models = JsonConvert.DeserializeObject<List<ListOfInvitation>>(data);
+
+                return View(models);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                TempData["Message"] = "Sorry, Invalid request";
                 return RedirectToAction("ListOfHouseHold", "HouseHold");
             }
-
-            var data = response.Content.ReadAsStringAsync().Result;
-
-            var models= JsonConvert.DeserializeObject<List<ListOfInvitation>>(data);
-
-            return View(models);
+            else
+            {
+                return RedirectToAction("Error", "Home");
+            }           
         }
 
         [HttpGet]
         public ActionResult AcceptInvitation(int id)
         {
-            var cookie = Request.Cookies["BBCookie"];
-            if (cookie == null)
-            {
-                return RedirectToAction("login", "Account");
-            }
-            var token = cookie.Value;
-
-            var url = $"http://localhost:55336/api/Household/AcceptInvitaion/{id}";
-
             var httpClient = new HttpClient();
 
-            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {ViewBag.Token}");
 
+            var url = $"http://localhost:55336/api/Household/AcceptInvitaion/{id}";
             var response = httpClient.GetAsync(url).Result;
-
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
+                TempData["Message"] = "Ok, you have joined the houseHold";
                 return RedirectToAction("ListOfHouseHold", "HouseHold");
-            } 
-
-            return View("CustomErrorView");
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                TempData["Message"] = "Sorry, Invalid request";
+                return RedirectToAction("ListOfHouseHold", "HouseHold");
+            }
+            else
+            {
+                return RedirectToAction("Error", "Home");
+            }
         }
 
         [HttpPost]
         public ActionResult LeaveHousehold(int id)
         {
-            var cookie = Request.Cookies["BBCookie"];
-            if (cookie == null)
-            {
-                return RedirectToAction("login", "Account");
-            }
-            var token = cookie.Value;
-
-            var url = $"http://localhost:55336/api/Household/Leave/{id}";
-
             var httpClient = new HttpClient();
 
-            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {ViewBag.Token}");
 
+            var url = $"http://localhost:55336/api/Household/Leave/{id}";
             var response = httpClient.DeleteAsync(url).Result;
+
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
+                TempData["Message"] = "You have leaved houseHold successfully";
                 return RedirectToAction("ListOfHouseHold", "HouseHold");
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
-                var data = response.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<APIErrorData>(data);
-
-                foreach (var ele in result.ModelState)
-                {
-                    ModelState.AddModelError("", ele.Value[0].ToString());
-                }
-                              
-                return View();
+                TempData["Message"] = "Sorry, Invalid request";
+                return RedirectToAction("ListOfHouseHold", "HouseHold");
             }
             else
             {
-                ModelState.AddModelError("", "Sorry, InternalServerError was occured during processing your request");
-                return View(ModelState);
+                return RedirectToAction("Error", "Home");
             }
         }
 
         [HttpPost]
         public ActionResult DeleteHouseHold(int id)
         {
-            var cookie = Request.Cookies["BBCookie"];
-            if (cookie == null)
-            {
-                return RedirectToAction("login", "Account");
-            }
-            var token = cookie.Value;
-
-            var url = $"http://localhost:55336/api/Household/Delete/{id}";
-
             var httpClient = new HttpClient();
 
-            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {ViewBag.Token}");
 
+            var url = $"http://localhost:55336/api/Household/Delete/{id}";
             var response = httpClient.DeleteAsync(url).Result;
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
+                TempData["Message"] = "You have deleted houseHold successfully";
                 return RedirectToAction("ListOfHouseHold", "HouseHold");
             }
-
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
-                var data = response.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<APIErrorData>(data);
-
-                foreach (var ele in result.ModelState)
-                {
-                    ModelState.AddModelError("", ele.Value[0].ToString());
-                }
-
-                return View();
+                TempData["Message"] = "Sorry, Invalid request";
+                return RedirectToAction("ListOfHouseHold", "HouseHold");
             }
             else
             {
-                ModelState.AddModelError("", "Sorry, InternalServerError was occured during processing your request");
-                return View(ModelState);
+                return RedirectToAction("Error", "Home");
             }
         }       
 
