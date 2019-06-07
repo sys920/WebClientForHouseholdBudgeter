@@ -7,8 +7,7 @@ using System.Web.Mvc;
 namespace WebClientForHouseholdBudgeter.Controllers
 {
     public class HomeController : Controller
-    {
-        // GET: Home
+    {   
         public ActionResult Error()
         {
             return View();

@@ -3,7 +3,7 @@
 <div class="container-fluid">
     <!-- Page Heading -->
     <div class="py-3">
-        <h6 class="m-0 font-weight-bold text-primary">List of BankAccount</h6>
+        <h6 class="m-0 font-weight-bold text-primary">List of bankAccount with transaction</h6>
         @if (TempData["Message"] != null)
         {
             <div class="text-danger">@TempData["Message"]</div>
@@ -29,8 +29,8 @@
                         @foreach (var ele in Model)
                         {
                             <tr>
-                                <td>@ele.Id</td>
-                                <td><a href="@Url.Action("DetailOfBankAccount","BankAccount", new {id =ele.Id})">@ele.Name</a></td>                               
+                                <td><a href="@Url.Action("DetailOfBankAccount","BankAccount", new {id =ele.Id,  householdId=ele.HouseHoldId})">@ele.Id</a></td>
+                                <td><a href="@Url.Action("DetailOfBankAccount","BankAccount", new {id =ele.Id,  householdId=ele.HouseHoldId})">@ele.Name</a></td>                               
                                 <td>$@ele.Balance</td>
                                 <th class="text-center">
                                     <a href="@Url.Action("ListOfTransaction", "Transaction", new {id =ele.Id,  householdId=ele.HouseHoldId})">@ele.NumberOfTransaction</a></th>

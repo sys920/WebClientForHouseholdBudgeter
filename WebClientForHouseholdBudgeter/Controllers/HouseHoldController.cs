@@ -14,7 +14,6 @@ namespace WebClientForHouseholdBudgeter.Controllers
     [CustomAuthorizationFilter]
     public class HouseHoldController : Controller
     {
-   
         public ActionResult Index()
         {  
             return View();
@@ -43,6 +42,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
+                TempData["Message"] = "HouseHold was careated successfully";
                 return RedirectToAction("ListOfHouseHold", "HouseHold");
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
@@ -119,7 +119,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
 
         [HttpGet]
         public ActionResult EditHouseHold(int id)
-        {  
+        {
             var httpClient = new HttpClient();
 
             httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {ViewBag.Token}");
@@ -167,6 +167,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
+                TempData["Message"] = "HouseHold was edited successfully";
                 return RedirectToAction("ListOfHouseHold", "HouseHold");
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
@@ -216,8 +217,13 @@ namespace WebClientForHouseholdBudgeter.Controllers
         }
 
         [HttpGet]
-        public ActionResult InviteUser(int id)
+        public ActionResult InviteUser(int? id)
         {
+            if (id == null)
+            {
+                return RedirectToAction("ListOfHouseHold", "HouseHold");
+            }
+
             ViewBag.HouseHoldId = id;
 
             return View();
@@ -307,7 +313,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
             var response = httpClient.GetAsync(url).Result;
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                TempData["Message"] = "Ok, you have joined the houseHold";
+                TempData["Message"] = "You have joined the houseHold";
                 return RedirectToAction("ListOfHouseHold", "HouseHold");
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
@@ -358,7 +364,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
             var response = httpClient.DeleteAsync(url).Result;
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                TempData["Message"] = "You have deleted houseHold successfully";
+                TempData["Message"] = "HouseHold was deleted successfully";
                 return RedirectToAction("ListOfHouseHold", "HouseHold");
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
@@ -370,7 +376,6 @@ namespace WebClientForHouseholdBudgeter.Controllers
             {
                 return RedirectToAction("Error", "Home");
             }
-        }       
-
+        } 
     }
 }

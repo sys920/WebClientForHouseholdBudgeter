@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Mvc;
 using WebClientForHouseholdBudgeter.Models;
+using WebClientForHouseholdBudgeter.Models.Filters;
 using WebClientForHouseholdBudgeter.Models.ViewModels.Account;
 
 namespace WebClientForHouseholdBudgeter.Controllers
@@ -73,8 +74,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
             {
                 return View(formData);
             }
-
-            var url = $"http://localhost:55336/Token";
+           
             var grantType = "password";
 
             var httpClient = new HttpClient();
@@ -83,10 +83,8 @@ namespace WebClientForHouseholdBudgeter.Controllers
             parameters.Add(new KeyValuePair<string, string>("Password", formData.Password));
             parameters.Add(new KeyValuePair<string, string>("grant_type", grantType));
 
-
-
             var enCodeParameters = new FormUrlEncodedContent(parameters);
-
+            var url = $"http://localhost:55336/Token";
             var response = httpClient.PostAsync(url, enCodeParameters).Result;
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
@@ -114,8 +112,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
             }
             else
             {
-                ModelState.AddModelError("", "Sorry, InternalServerError was occured during processing your request");
-                return View(ModelState);
+                return RedirectToAction("Error", "Home");
             }
         }
 
@@ -139,40 +136,30 @@ namespace WebClientForHouseholdBudgeter.Controllers
             return View();
         }
 
+        [CustomAuthorizationFilter]
         [HttpPost]
         public ActionResult ChangePassword(ChangePasswordViewModel formData)
-        {           
-
+        {   
             if (!ModelState.IsValid)
             {
-                return View();
+                return View(formData);
             }
-
-            var url = $"http://localhost:55336/api/Account/ChangePassword";           
-
             var httpClient = new HttpClient();
+
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {ViewBag.Token}");
+
             var parameters = new List<KeyValuePair<string, string>>();
             parameters.Add(new KeyValuePair<string, string>("OldPassword", formData.OldPassword));
             parameters.Add(new KeyValuePair<string, string>("NewPassword", formData.NewPassword));
             parameters.Add(new KeyValuePair<string, string>("ConfirmPassword", formData.ConfirmPassword));    
 
-            var enCodeParameters = new FormUrlEncodedContent(parameters);
-
-            var cookie = Request.Cookies["BBCookie"];
-
-            if (cookie == null)
-            {
-                return RedirectToAction("Login","Account");
-            }
-            var token = cookie.Value;    
-         
-            httpClient.DefaultRequestHeaders.Add("Authorization",$"Bearer {token}");   
-
+            var enCodeParameters = new FormUrlEncodedContent(parameters); 
+            var url = $"http://localhost:55336/api/Account/ChangePassword";
             var response = httpClient.PostAsync(url, enCodeParameters).Result;
             
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             { 
-                return RedirectToAction("Index", "HouseHold");
+                return RedirectToAction("ListOfHouseHold", "HouseHold");
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
@@ -184,12 +171,11 @@ namespace WebClientForHouseholdBudgeter.Controllers
                     ModelState.AddModelError("", ele.Value[0].ToString());
                 }
 
-                return View();
+                return View(formData);
             }
             else
             {
-                ModelState.AddModelError("", "Sorry, InternalServerError was occured during processing your request");
-                return View(ModelState);
+                return RedirectToAction("Error", "Home");
             }
         }
 
@@ -230,12 +216,11 @@ namespace WebClientForHouseholdBudgeter.Controllers
                 {
                     ModelState.AddModelError("", ele.Value[0].ToString());
                 }
-                return View();
+                return View(formData);
             }
             else
             {
-                ModelState.AddModelError("", "Sorry, InternalServerError was occured during processing your request");
-                return View(ModelState);
+                return RedirectToAction("Error", "Home");
             }
         }
 
@@ -245,15 +230,14 @@ namespace WebClientForHouseholdBudgeter.Controllers
             return View();
         }
 
+
         [HttpPost]
         public ActionResult SetPassword(SetPasswordViewModel formData)
         {
             if (!ModelState.IsValid)
             {
-                return View();
+                return View(formData);
             }
-
-            var url = $"http://localhost:55336/api/Account/SetPassword";
 
             var httpClient = new HttpClient();
             var parameters = new List<KeyValuePair<string, string>>();
@@ -264,6 +248,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
 
             var enCodeParameters = new FormUrlEncodedContent(parameters);
 
+            var url = $"http://localhost:55336/api/Account/SetPassword";
             var response = httpClient.PostAsync(url, enCodeParameters).Result;
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
@@ -278,14 +263,12 @@ namespace WebClientForHouseholdBudgeter.Controllers
                 {
                     ModelState.AddModelError("", ele.Value[0].ToString());
                 }
-                return View();
+                return View(formData);
             }
             else
             {
-                ModelState.AddModelError("", "Sorry, InternalServerError was occured during processing your request");
-                return View(ModelState);
+                return RedirectToAction("Error", "Home");
             }
-        }
-       
+        }       
     }
 }

@@ -6,37 +6,25 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Mvc;
 using WebClientForHouseholdBudgeter.Models;
+using WebClientForHouseholdBudgeter.Models.Filters;
 using WebClientForHouseholdBudgeter.Models.ViewModels.Category;
 using WebClientForHouseholdBudgeter.Models.ViewModels.Transaction;
 
 namespace WebClientForHouseholdBudgeter.Controllers
 {
+    [CustomAuthorizationFilter]
     public class TransactionController : Controller
     {
         [HttpGet]
-        public ActionResult CreateTransaction(int? id, int? houseHoldId)
+        public ActionResult CreateTransaction(int id, int houseHoldId)
         {
-            if (id == null || houseHoldId == null)
-            {
-                return RedirectToAction("ListOfHouseHoldForBankAccount", "BankAccount");
-            }
-
             ViewBag.BankAccountId = id;
             ViewBag.HouseHoldId = houseHoldId;
 
-            var cookie = Request.Cookies["BBCookie"];
-
-            if (cookie == null)
-            {
-                return RedirectToAction("login", "Account");
-            }
-            var token = cookie.Values;         
-
             var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {ViewBag.Token}");
 
             var url = $"http://localhost:55336/api/Category/GetAllCategory/{houseHoldId}";
-
             var response = httpClient.GetAsync(url).Result;
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
@@ -50,12 +38,10 @@ namespace WebClientForHouseholdBudgeter.Controllers
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
-
                 return RedirectToAction("ListOFHouseHoldForBankAccount", "BankAccount");
             }
             else
             {
-                ModelState.AddModelError("Error", "Sorry, Internal server Error occured");
                 return RedirectToAction("Error", "Home");
             }
         }
@@ -63,17 +49,9 @@ namespace WebClientForHouseholdBudgeter.Controllers
         [HttpPost]
         public ActionResult CreateTransaction (CreateTransactionViewModel formData)
         {
-            var cookie = Request.Cookies["BBCookie"];
-
-            if (cookie == null)
-            {
-                return RedirectToAction("login", "Account");
-            }
-            var token = cookie.Values;
-
             var httpClient = new HttpClient();
 
-            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {ViewBag.Token}");
 
             var url_Category = $"http://localhost:55336/api/Category/GetAllCategory/{formData.HouseHoldId}";
             var response_Category = httpClient.GetAsync(url_Category).Result;
@@ -89,21 +67,21 @@ namespace WebClientForHouseholdBudgeter.Controllers
                 return View(formData);              
             }
 
-            var url = $"http://localhost:55336/api/Transaction/Create/"; 
-
             var parameters = new List<KeyValuePair<string, string>>();
             parameters.Add(new KeyValuePair<string, string>("BankAccountId", formData.BankAccountId.ToString()));
             parameters.Add(new KeyValuePair<string, string>("Name", formData.Name));
             parameters.Add(new KeyValuePair<string, string>("Description", formData.Description));
             parameters.Add(new KeyValuePair<string, string>("Date", formData.Date.ToString()));
             parameters.Add(new KeyValuePair<string, string>("CategoryId", formData.CategoryId.ToString()));
-            parameters.Add(new KeyValuePair<string, string>("Amount", formData.Amount.ToString()));           
+            parameters.Add(new KeyValuePair<string, string>("Amount", formData.Amount.ToString())); 
 
             var enCodeParameters = new FormUrlEncodedContent(parameters);
-
+            var url = $"http://localhost:55336/api/Transaction/Create/";
             var response = httpClient.PostAsync(url, enCodeParameters).Result;
+
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
+                TempData["Message"] = "Transaction was createded successfully";
                 return RedirectToAction("ListOfBankAccount", "BankAccount", new { id = formData.HouseHoldId });
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
@@ -119,8 +97,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
                 return View(formData);
             }
             else
-            {
-                ModelState.AddModelError("Error", "Sorry, Internal server Error occured");
+            {              
                 return RedirectToAction("Error", "Home");
             }
         }
@@ -130,62 +107,37 @@ namespace WebClientForHouseholdBudgeter.Controllers
         {
             ViewBag.HouseHoldId = householdId;
 
-            var cookie = Request.Cookies["BBCookie"];
-
-            if (cookie == null)
-            {
-                return RedirectToAction("login", "Account");
-            }
-            var token = cookie.Values;
-
-            var url = $"http://localhost:55336/api/Transaction/GetAll/{id}";
-
             var httpClient = new HttpClient();
 
-            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {ViewBag.Token}");
 
+            var url = $"http://localhost:55336/api/Transaction/GetAll/{id}";
             var response = httpClient.GetAsync(url).Result;
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var data = response.Content.ReadAsStringAsync().Result;
-                var model = JsonConvert.DeserializeObject<List<TransactionListViewModel>>(data);
-               
+                var model = JsonConvert.DeserializeObject<List<TransactionListViewModel>>(data); 
 
                 return View(model);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
-
-                return RedirectToAction("ListOFBankAccount", "BankAccount");
+                TempData["Message"] = "Sorry, Invalid request";
+                return RedirectToAction("ListOfBankAccount", "BankAccount", new { id = householdId });
             }
             else
-            {
-                ModelState.AddModelError("Error", "Sorry, Internal server Error occured");
+            {               
                 return RedirectToAction("Error", "Home");
             }        
         }
 
         [HttpGet]
-        public ActionResult EditTransaction(int? id, int? houseHoldId)
-        {
-            if (id == null || houseHoldId == null)
-            {
-                return RedirectToAction("ListOfHouseHoldForBankAccount", "BankAccount");
-            }
-                        
+        public ActionResult EditTransaction(int id, int houseHoldId)
+        {                        
             ViewBag.HouseHoldId = houseHoldId;
 
-            var cookie = Request.Cookies["BBCookie"];
-
-            if (cookie == null)
-            {
-                return RedirectToAction("login", "Account");
-            }
-            var token = cookie.Values;
-
             var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {ViewBag.Token}");
 
             var url = $"http://localhost:55336/api/Transaction/GetById/{id}";
             var response = httpClient.GetAsync(url).Result;
@@ -206,33 +158,20 @@ namespace WebClientForHouseholdBudgeter.Controllers
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
-                return RedirectToAction("ListOFHouseHoldForBankAccount", "BankAccount");
+                TempData["Message"] = "Sorry, Invalid request";
+                return RedirectToAction("ListOfBankAccount", "BankAccount", new { id = houseHoldId });
             }
             else
             {                
                 return RedirectToAction("Error", "Home");
-            }
-            
+            }            
         }
 
         [HttpPost]
-        public ActionResult EditTransaction(int? id, EditTransactionViewModel formData)
-        {
-            if (id == null)
-            {
-                return RedirectToAction("ListOfTransaction", "Transation", new { id = formData.BankAccountId });
-            }
-
-            var cookie = Request.Cookies["BBCookie"];
-            if (cookie == null)
-            {
-                return RedirectToAction("login", "Account");
-            }
-
-            var token = cookie.Values;
-
+        public ActionResult EditTransaction(int id, EditTransactionViewModel formData)
+        {           
             var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {ViewBag.Token}");
 
             var url_Category = $"http://localhost:55336/api/Category/GetAllCategory/{formData.HouseHoldId}";
             var response_Category = httpClient.GetAsync(url_Category).Result;
@@ -244,9 +183,7 @@ namespace WebClientForHouseholdBudgeter.Controllers
             {
                 return View(formData);
             }
-
-            var url = $"http://localhost:55336/api/Transaction/Update/{id}";
-      
+            
             var parameters = new List<KeyValuePair<string, string>>();
             parameters.Add(new KeyValuePair<string, string>("Name", formData.Name));
             parameters.Add(new KeyValuePair<string, string>("Description", formData.Description));
@@ -255,11 +192,11 @@ namespace WebClientForHouseholdBudgeter.Controllers
             parameters.Add(new KeyValuePair<string, string>("Amount", formData.Amount.ToString()));
 
             var enCodeParameters = new FormUrlEncodedContent(parameters);
-
+            var url = $"http://localhost:55336/api/Transaction/Update/{id}";
             var response = httpClient.PutAsync(url, enCodeParameters).Result;
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-
+                TempData["Message"] = "Transaction was edited successfully";
                 return RedirectToAction("ListOfTransaction", "Transaction", new { id = formData.BankAccountId, houseHoldId=formData.HouseHoldId });
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
@@ -281,36 +218,23 @@ namespace WebClientForHouseholdBudgeter.Controllers
         }
 
         [HttpPost]
-        public ActionResult DeleteTransaction(int? id, int? bankAccountId, int? houseHoldId)
+        public ActionResult DeleteTransaction(int id, int bankAccountId, int houseHoldId)
         {
-            if (id == null || bankAccountId == null || houseHoldId ==null)
-            {
-                return RedirectToAction("ListOfHouseHoldForBankAccount", "BankAccount");
-            }
-
-            var cookie = Request.Cookies["BBCookie"];
-
-            if (cookie == null)
-            {
-                return RedirectToAction("login", "Account");
-            }
-            var token = cookie.Value;
-
-            var url = $"http://localhost:55336/api/Transaction/Delete/{id}";
-
             var httpClient = new HttpClient();
 
-            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {ViewBag.Token}");
+            var url = $"http://localhost:55336/api/Transaction/Delete/{id}";
             var response = httpClient.DeleteAsync(url).Result;
+
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
+                TempData["Message"] = "Transaction was deleted successfully";
                 return RedirectToAction("ListOfTransaction", "Transaction", new { id = bankAccountId, houseHoldId = houseHoldId });
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
-
-                return RedirectToAction("ListOfHouseHoldForBankAccount", "BankAccount");
+                TempData["Message"] = "Sorry, Invalid request";
+                return RedirectToAction("ListOfTransaction", "Transaction", new { id = bankAccountId, houseHoldId = houseHoldId });
             }
             else
             {
@@ -319,36 +243,23 @@ namespace WebClientForHouseholdBudgeter.Controllers
         }
 
         [HttpPost]
-        public ActionResult VoidTransaction(int? id, int? bankAccountId, int? houseHoldId)
+        public ActionResult VoidTransaction(int id, int bankAccountId, int houseHoldId)
         {
-            if (id == null || bankAccountId == null || houseHoldId == null)
-            {
-                return RedirectToAction("ListOfHouseHoldForBankAccount", "BankAccount");
-            }
-
-            var cookie = Request.Cookies["BBCookie"];
-
-            if (cookie == null)
-            {
-                return RedirectToAction("login", "Account");
-            }
-            var token = cookie.Value;
-
-            var url = $"http://localhost:55336/api/Transaction/Void/{id}";
-
             var httpClient = new HttpClient();
 
-            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {ViewBag.Token}");
+
+            var url = $"http://localhost:55336/api/Transaction/Void/{id}";
             var response = httpClient.GetAsync(url).Result;
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
+                TempData["Message"] = "Transaction was voided successfully";
                 return RedirectToAction("ListOfTransaction", "Transaction", new { id = bankAccountId, houseHoldId = houseHoldId });
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
-
-                return RedirectToAction("ListOfHouseHoldForBankAccount", "BankAccount");
-            }
+                TempData["Message"] = "Sorry, Invalid request";
+                return RedirectToAction("ListOfTransaction", "Transaction", new { id = bankAccountId, houseHoldId = houseHoldId });            }
             else
             {
                 return RedirectToAction("Error", "Home");
