@@ -2,7 +2,7 @@
 {    
     <ul class="nav navbar-nav navbar-right">
         <li>
-            <i class="fas fa-user-check"></i> Hello! @Request.Cookies["UserEmail"].Value
+            <i class="fas fa-user-check"></i> Hello! @Request.Cookies["BBCookie"]["UserEmail"].ToString()
         </li>
         <li>&nbsp; &nbsp;</li>
         <li><a href="#" data-toggle="modal" data-target="#logoutModal"><i class="fas fa-sign-out-alt"></i> Log off</a></li>

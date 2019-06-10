@@ -16,6 +16,7 @@ namespace WebClientForHouseholdBudgeter.Models.Filters
             base.OnActionExecuting(filterContext);
 
             var cookie = filterContext.HttpContext.Request.Cookies["BBCookie"];
+                        
 
             if (cookie == null)
             {
@@ -25,7 +26,9 @@ namespace WebClientForHouseholdBudgeter.Models.Filters
             }
             else
             {
-                var token = cookie.Values;
+                //var token = cookie.Values
+                var token = cookie.Values["Token"];
+               
                 filterContext.Controller.ViewBag.Token = token;              
             }                     
         }
