@@ -26,6 +26,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                     
                         @foreach (var ele in Model)
                         {
                             <tr>
@@ -39,7 +40,7 @@
                                     @if (ele.IsOwner)
                                     {
                                         <a href="@Url.Action("InviteUser", "HouseHold", new {id =ele.Id})"> <button><i class="fas fa-user-plus"></i></button> </a>
-                                       
+
                                     }
                                 </td>
 
@@ -60,11 +61,10 @@
                                 </td>
                                 <td class="text-center">
                                     @if (ele.IsOwner)
-                                    {                                       
+                                    {
                                         <form method="post" action="@Url.Action("DeleteHouseHold", "HouseHold", new {id =ele.Id})">
-                                            <button type="submit"><i class="fas fa-trash-alt"></i></button>
-                                        </form>
-                                    }
+                                            <button type="submit"><i class="fas fa-trash-alt"></i></button ></form>
+                                     } 
                                 </td>
                             </tr>
                         }
@@ -75,3 +75,6 @@
         </div>
     </div>
 </div>
+
+
+
