@@ -53,25 +53,20 @@
                                             <button><i class="fas fa-edit"></i></button>
                                         </a>
                                     }
-
                                 </td>
-
                                 <td class="text-center">
                                     @if (ele.IsOwner)
                                     {
-                                        <form method="post" action="@Url.Action("DeleteTransaction", "Transaction",new {id =ele.TransactionId, bankAccountId=ele.BankAccountId, houseHoldId=ViewBag.HouseHoldId})">
-                                            <button type="submit"><i class="fas fa-trash-alt"></i></button>
-                                        </form>
+                                        <a href="#" onclick="ConfirmDeleteTransaction(@ele.TransactionId, @ele.BankAccountId, @ViewBag.HouseHoldId)">
+                                            <button><i class="fas fa-trash-alt"></i></button>
+                                        </a>
                                     }
                                 </td>
                                 <td class="text-center">
                                     @if (ele.IsOwner && ele.Void == false)
-                                    {
-
-
-                                        <form method="post" action="@Url.Action("VoidTransaction", "Transaction",new {id =ele.TransactionId, bankAccountId=ele.BankAccountId, houseHoldId=ViewBag.HouseHoldId})">
-                                            <button type="submit"><i class="fas fa-strikethrough"></i></button>
-                                        </form>
+                                    {<a href="#" onclick="ConfirmVoidTransaction(@ele.TransactionId, @ele.BankAccountId, @ViewBag.HouseHoldId)">
+                                            <button><i class="fas fa-strikethrough"></i></button>
+                                        </a>
                                     }
                                 </td>
                             </tr>
@@ -83,4 +78,97 @@
         </div>
     </div>
 </div>
+
+<input type="hidden" id="hiddenTransactionId" />
+<input type="hidden" id="hiddenBankAccountId" />
+<input type="hidden" id="hiddenHouseHoldId" />
+
+
+<!-- DeleteTransaction Modal-->
+
+<div class="modal fade" id="DeleteTransactionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ready to delete Transaction?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Delete" below if you want to delete your transaction.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a href="#" class="btn btn-danger" onclick="DeleteTransaction()">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- VoidTransaction Modal-->
+<div class="modal fade" id="VoidTransactionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ready to Void Transaction?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Void" below if you wnat to void your transaction.<br >After voiding your balance doesn't count this transaction and you never get it back!!</div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a href="#" class="btn btn-danger" onclick="VoidTransaction()">Void</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var ConfirmDeleteTransaction = function (transactionId, bankAccountId, houseHoldId) {
+        $("#DeleteTransactionModal").modal("show");
+
+        $("#hiddenTransactionId").val(transactionId);
+        $("#hiddenBankAccountId").val(bankAccountId);
+        $("#hiddenHouseHoldId").val(houseHoldId);
+    }
+
+    var DeleteTransaction = function () {
+        var transactionId = $("#hiddenTransactionId").val();
+        var bankAccountId = $("#hiddenBankAccountId").val();
+        var houseHoldId = $("#hiddenHouseHoldId").val();
+        $.ajax({
+            type: "Post",
+            url: "/Transaction/DeleteTransaction",
+            data: { id: transactionId, bankAccountId: bankAccountId, houseHoldId: houseHoldId },
+            success: function () {
+                $("#DeleteTransactionModal").modal("hide");
+                window.location.reload();
+            }
+        })
+    }
+
+    var ConfirmVoidTransaction = function (transactionId, bankAccountId, houseHoldId) {
+        $("#VoidTransactionModal").modal("show");
+
+        $("#hiddenTransactionId").val(transactionId);
+        $("#hiddenBankAccountId").val(bankAccountId);
+        $("#hiddenHouseHoldId").val(houseHoldId);
+    }
+
+    var VoidTransaction = function () {
+        var transactionId = $("#hiddenTransactionId").val();
+        var bankAccountId = $("#hiddenBankAccountId").val();
+        var houseHoldId = $("#hiddenHouseHoldId").val();
+        $.ajax({
+            type: "Post",
+            url: "/Transaction/VoidTransaction",
+            data: { id: transactionId, bankAccountId: bankAccountId, houseHoldId: houseHoldId },
+            success: function () {
+                $("#VoidTransactionModal").modal("hide");
+                window.location.reload();
+            }
+        })
+    }
+</script>
 
